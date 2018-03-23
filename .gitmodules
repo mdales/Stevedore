@@ -1,0 +1,3 @@
+[submodule "ThirdParty/docker-client-swift"]
+	path = ThirdParty/docker-client-swift
+	url = https://github.com/valeriomazzeo/docker-client-swift.git
