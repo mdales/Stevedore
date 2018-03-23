@@ -1,0 +1,432 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 48;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		4C355B7E206536DE0020798B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C355B7D206536DE0020798B /* AppDelegate.swift */; };
+		4C355B80206536DE0020798B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4C355B7F206536DE0020798B /* Assets.xcassets */; };
+		4C355B83206536DE0020798B /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C355B81206536DE0020798B /* MainMenu.xib */; };
+		4C355B8F206536DE0020798B /* StevedoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C355B8E206536DE0020798B /* StevedoreTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		4C355B8B206536DE0020798B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4C355B72206536DE0020798B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4C355B79206536DE0020798B;
+			remoteInfo = Stevedore;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		4C355B7A206536DE0020798B /* Stevedore.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Stevedore.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4C355B7D206536DE0020798B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		4C355B7F206536DE0020798B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		4C355B82206536DE0020798B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		4C355B84206536DE0020798B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4C355B85206536DE0020798B /* Stevedore.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Stevedore.entitlements; sourceTree = "<group>"; };
+		4C355B8A206536DE0020798B /* StevedoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StevedoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4C355B8E206536DE0020798B /* StevedoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StevedoreTests.swift; sourceTree = "<group>"; };
+		4C355B90206536DE0020798B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		4C355B77206536DE0020798B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4C355B87206536DE0020798B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4C355B71206536DE0020798B = {
+			isa = PBXGroup;
+			children = (
+				4C355B7C206536DE0020798B /* Stevedore */,
+				4C355B8D206536DE0020798B /* StevedoreTests */,
+				4C355B7B206536DE0020798B /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		4C355B7B206536DE0020798B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4C355B7A206536DE0020798B /* Stevedore.app */,
+				4C355B8A206536DE0020798B /* StevedoreTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		4C355B7C206536DE0020798B /* Stevedore */ = {
+			isa = PBXGroup;
+			children = (
+				4C355B7D206536DE0020798B /* AppDelegate.swift */,
+				4C355B7F206536DE0020798B /* Assets.xcassets */,
+				4C355B81206536DE0020798B /* MainMenu.xib */,
+				4C355B84206536DE0020798B /* Info.plist */,
+				4C355B85206536DE0020798B /* Stevedore.entitlements */,
+			);
+			path = Stevedore;
+			sourceTree = "<group>";
+		};
+		4C355B8D206536DE0020798B /* StevedoreTests */ = {
+			isa = PBXGroup;
+			children = (
+				4C355B8E206536DE0020798B /* StevedoreTests.swift */,
+				4C355B90206536DE0020798B /* Info.plist */,
+			);
+			path = StevedoreTests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		4C355B79206536DE0020798B /* Stevedore */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4C355B93206536DE0020798B /* Build configuration list for PBXNativeTarget "Stevedore" */;
+			buildPhases = (
+				4C355B76206536DE0020798B /* Sources */,
+				4C355B77206536DE0020798B /* Frameworks */,
+				4C355B78206536DE0020798B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Stevedore;
+			productName = Stevedore;
+			productReference = 4C355B7A206536DE0020798B /* Stevedore.app */;
+			productType = "com.apple.product-type.application";
+		};
+		4C355B89206536DE0020798B /* StevedoreTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4C355B96206536DE0020798B /* Build configuration list for PBXNativeTarget "StevedoreTests" */;
+			buildPhases = (
+				4C355B86206536DE0020798B /* Sources */,
+				4C355B87206536DE0020798B /* Frameworks */,
+				4C355B88206536DE0020798B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4C355B8C206536DE0020798B /* PBXTargetDependency */,
+			);
+			name = StevedoreTests;
+			productName = StevedoreTests;
+			productReference = 4C355B8A206536DE0020798B /* StevedoreTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4C355B72206536DE0020798B /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0900;
+				LastUpgradeCheck = 0900;
+				ORGANIZATIONNAME = "Digital Flapjack";
+				TargetAttributes = {
+					4C355B79206536DE0020798B = {
+						CreatedOnToolsVersion = 9.0;
+						ProvisioningStyle = Automatic;
+					};
+					4C355B89206536DE0020798B = {
+						CreatedOnToolsVersion = 9.0;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 4C355B79206536DE0020798B;
+					};
+				};
+			};
+			buildConfigurationList = 4C355B75206536DE0020798B /* Build configuration list for PBXProject "Stevedore" */;
+			compatibilityVersion = "Xcode 8.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 4C355B71206536DE0020798B;
+			productRefGroup = 4C355B7B206536DE0020798B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				4C355B79206536DE0020798B /* Stevedore */,
+				4C355B89206536DE0020798B /* StevedoreTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		4C355B78206536DE0020798B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4C355B80206536DE0020798B /* Assets.xcassets in Resources */,
+				4C355B83206536DE0020798B /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4C355B88206536DE0020798B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		4C355B76206536DE0020798B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4C355B7E206536DE0020798B /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4C355B86206536DE0020798B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4C355B8F206536DE0020798B /* StevedoreTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		4C355B8C206536DE0020798B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4C355B79206536DE0020798B /* Stevedore */;
+			targetProxy = 4C355B8B206536DE0020798B /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		4C355B81206536DE0020798B /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4C355B82206536DE0020798B /* Base */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		4C355B91206536DE0020798B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		4C355B92206536DE0020798B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+			};
+			name = Release;
+		};
+		4C355B94206536DE0020798B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Stevedore/Stevedore.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = Stevedore/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.digitalflapjack.Stevedore;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+			};
+			name = Debug;
+		};
+		4C355B95206536DE0020798B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Stevedore/Stevedore.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = Stevedore/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.digitalflapjack.Stevedore;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+			};
+			name = Release;
+		};
+		4C355B97206536DE0020798B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = StevedoreTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.digitalflapjack.StevedoreTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Stevedore.app/Contents/MacOS/Stevedore";
+			};
+			name = Debug;
+		};
+		4C355B98206536DE0020798B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = StevedoreTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.digitalflapjack.StevedoreTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Stevedore.app/Contents/MacOS/Stevedore";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4C355B75206536DE0020798B /* Build configuration list for PBXProject "Stevedore" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4C355B91206536DE0020798B /* Debug */,
+				4C355B92206536DE0020798B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4C355B93206536DE0020798B /* Build configuration list for PBXNativeTarget "Stevedore" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4C355B94206536DE0020798B /* Debug */,
+				4C355B95206536DE0020798B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4C355B96206536DE0020798B /* Build configuration list for PBXNativeTarget "StevedoreTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4C355B97206536DE0020798B /* Debug */,
+				4C355B98206536DE0020798B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 4C355B72206536DE0020798B /* Project object */;
+}
