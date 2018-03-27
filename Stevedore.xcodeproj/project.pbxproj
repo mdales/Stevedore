@@ -7,11 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4C13062E2066C66B00D55183 /* DockerChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C13062D2066C66B00D55183 /* DockerChannel.swift */; };
 		4C355B7E206536DE0020798B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C355B7D206536DE0020798B /* AppDelegate.swift */; };
 		4C355B80206536DE0020798B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4C355B7F206536DE0020798B /* Assets.xcassets */; };
 		4C355B83206536DE0020798B /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C355B81206536DE0020798B /* MainMenu.xib */; };
 		4C355B8F206536DE0020798B /* StevedoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C355B8E206536DE0020798B /* StevedoreTests.swift */; };
 		4C355B9A20654B210020798B /* StevedoreController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C355B9920654B210020798B /* StevedoreController.swift */; };
+		4C7EBF9920655BFB00A98CDB /* DockerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7EBF9820655BFB00A98CDB /* DockerController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -25,6 +27,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4C13062D2066C66B00D55183 /* DockerChannel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DockerChannel.swift; sourceTree = "<group>"; };
 		4C355B7A206536DE0020798B /* Stevedore.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Stevedore.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C355B7D206536DE0020798B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4C355B7F206536DE0020798B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -35,6 +38,7 @@
 		4C355B8E206536DE0020798B /* StevedoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StevedoreTests.swift; sourceTree = "<group>"; };
 		4C355B90206536DE0020798B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4C355B9920654B210020798B /* StevedoreController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StevedoreController.swift; sourceTree = "<group>"; };
+		4C7EBF9820655BFB00A98CDB /* DockerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DockerController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,12 +59,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4C13062C2066C63000D55183 /* DockerLibrary */ = {
+			isa = PBXGroup;
+			children = (
+				4C7EBF9820655BFB00A98CDB /* DockerController.swift */,
+				4C13062D2066C66B00D55183 /* DockerChannel.swift */,
+			);
+			path = DockerLibrary;
+			sourceTree = "<group>";
+		};
 		4C355B71206536DE0020798B = {
 			isa = PBXGroup;
 			children = (
 				4C355B7C206536DE0020798B /* Stevedore */,
 				4C355B8D206536DE0020798B /* StevedoreTests */,
 				4C355B7B206536DE0020798B /* Products */,
+				4C7EBF952065573E00A98CDB /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -76,6 +90,7 @@
 		4C355B7C206536DE0020798B /* Stevedore */ = {
 			isa = PBXGroup;
 			children = (
+				4C13062C2066C63000D55183 /* DockerLibrary */,
 				4C355B7D206536DE0020798B /* AppDelegate.swift */,
 				4C355B9920654B210020798B /* StevedoreController.swift */,
 				4C355B7F206536DE0020798B /* Assets.xcassets */,
@@ -93,6 +108,13 @@
 				4C355B90206536DE0020798B /* Info.plist */,
 			);
 			path = StevedoreTests;
+			sourceTree = "<group>";
+		};
+		4C7EBF952065573E00A98CDB /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -146,6 +168,11 @@
 					4C355B79206536DE0020798B = {
 						CreatedOnToolsVersion = 9.0;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.Sandbox = {
+								enabled = 0;
+							};
+						};
 					};
 					4C355B89206536DE0020798B = {
 						CreatedOnToolsVersion = 9.0;
@@ -198,7 +225,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				4C355B7E206536DE0020798B /* AppDelegate.swift in Sources */,
+				4C7EBF9920655BFB00A98CDB /* DockerController.swift in Sources */,
 				4C355B9A20654B210020798B /* StevedoreController.swift in Sources */,
+				4C13062E2066C66B00D55183 /* DockerChannel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -342,13 +371,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = Stevedore/Stevedore.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = Stevedore/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.digitalflapjack.Stevedore;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_INCLUDE_PATHS = "${SRCROOT}/ThirdParty/**";
 				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
@@ -357,13 +386,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = Stevedore/Stevedore.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = Stevedore/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.digitalflapjack.Stevedore;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_INCLUDE_PATHS = "${SRCROOT}/ThirdParty/**";
 				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
