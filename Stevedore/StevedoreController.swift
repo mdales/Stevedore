@@ -8,7 +8,7 @@
 
 import Cocoa
 
-class StevedoreController: NSObject, DockerControllerDelegate {
+class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
 
     @IBOutlet weak var statusMenu: NSMenu!
     @IBOutlet weak var infoMenuItem: NSMenuItem!
@@ -60,5 +60,17 @@ class StevedoreController: NSObject, DockerControllerDelegate {
             self.infoMenuItem.title = "Docker Status: OK"
             self.containersMenuItem.title = String(format: "Containers: %d", info.ContainersRunning)
         }
+    }
+    
+    func menuWillOpen(_ menu: NSMenu) {
+        print("menu will open")
+        do {
+            try docker.requestInfo()
+        } catch {
+            print("Failed to talk to docker: \(error)")
+            self.statusItem.image = self.unhealthyIcon
+            self.infoMenuItem.title = "Docker Status: Uncommincative"
+        }
+        print("done")
     }
 }

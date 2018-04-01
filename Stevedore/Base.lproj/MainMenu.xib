@@ -36,6 +36,9 @@
                     </connections>
                 </menuItem>
             </items>
+            <connections>
+                <outlet property="delegate" destination="c6w-ac-WH4" id="fh1-e1-vmZ"/>
+            </connections>
         </menu>
     </objects>
 </document>

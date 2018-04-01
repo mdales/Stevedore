@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import DockerClient
 
 protocol DockerControllerDelegate: AnyObject {
     func dockerControllerReceivedInfo(info: DockerAPIResponseInfo)

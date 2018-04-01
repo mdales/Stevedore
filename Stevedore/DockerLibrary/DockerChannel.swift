@@ -68,7 +68,10 @@ class DockerChannel  {
             let len = formattedString.withCString{ Int(strlen($0)) }
             formattedString.withCString {
                 let dd = DispatchData(bytes: UnsafeRawBufferPointer(start: $0, count: len))
-                d.write(offset: 0, data: dd, queue: socket_queue, ioHandler: { (b, d, r) in  })
+                d.write(offset: 0, data: dd, queue: socket_queue, ioHandler: { (b, d, r) in
+                    print(b)
+                    print(r)
+                })
             }
         }
     }
@@ -109,9 +112,11 @@ class DockerChannel  {
             let d = DispatchIO(type: DispatchIO.StreamType.stream, fileDescriptor: _fd, queue: socket_queue,
                                cleanupHandler: { (_fd) in print("closed \(_fd)") })
             ioChannel = d
+            
+            d.setLimit(lowWater: 1)
 
             d.read(offset: 0, length: Int.max, queue: socket_queue) { [weak self] (a, b, c) in
-                
+                print("boo")
                 guard let slf = self else {
                     return
                 }
@@ -124,7 +129,7 @@ class DockerChannel  {
                     d.withUnsafeMutableBytes{(bytes: UnsafeMutablePointer<UInt8>)->Void in
                         b.copyBytes(to: bytes, count: b.count)
                     }
-                    let s = String(data: d, encoding: String.Encoding.utf8) as String!
+                    let s = String(data: d, encoding: String.Encoding.utf8) as String?
                     guard let response = s else {
                         return
                     }
