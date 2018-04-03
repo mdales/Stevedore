@@ -7,12 +7,15 @@
 //
 
 import Cocoa
+import os.log
 
 class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
 
     @IBOutlet weak var statusMenu: NSMenu!
     @IBOutlet weak var infoMenuItem: NSMenuItem!
     @IBOutlet weak var containersMenuItem: NSMenuItem!
+    
+    static let logger = OSLog(subsystem: "com.digitalflapjack.stevedore", category: "general")
     
     let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
     let docker = DockerController()
@@ -50,7 +53,7 @@ class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
             try docker.connect(delegate: self)
             try docker.requestInfo()
         } catch {
-            print("Error talking to Docker: \(error)")
+            os_log("Error talking to Docker: %s", log: StevedoreController.logger, type: .error, error.localizedDescription)
         }
     }
     
@@ -62,11 +65,15 @@ class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
         }
     }
     
+    func dockerControllerReceivedUnexpectedMessage(message: String) {	
+        os_log("Received unexpected message from Docker: %s", log: StevedoreController.logger, type: .info, message)
+    }
+    
     func menuWillOpen(_ menu: NSMenu) {
         do {
             try docker.requestInfo()
         } catch {
-            print("Failed to talk to docker: \(error)")
+            os_log("Failed to talk to docker: %s", log: StevedoreController.logger, type: .error, error.localizedDescription)
             self.statusItem.image = self.unhealthyIcon
             self.infoMenuItem.title = "Docker Status: Uncommincative"
         }

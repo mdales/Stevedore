@@ -77,8 +77,7 @@ class DockerChannel  {
             formattedString.withCString {
                 let dd = DispatchData(bytes: UnsafeRawBufferPointer(start: $0, count: len))
                 d.write(offset: 0, data: dd, queue: sQueue, ioHandler: { (b, d, r) in
-                    print(b)
-                    print(r)
+                    // todo
                 })
             }
         }
@@ -118,13 +117,14 @@ class DockerChannel  {
             }
             
             let d = DispatchIO(type: DispatchIO.StreamType.stream, fileDescriptor: _fd, queue: socket_queue,
-                               cleanupHandler: { (_fd) in print("closed \(_fd)") })
+                               cleanupHandler: { (_fd) in
+                                // todo
+            })
             ioChannel = d
             
             d.setLimit(lowWater: 1)
 
             d.read(offset: 0, length: Int.max, queue: socket_queue) { [weak self] (a, b, c) in
-                print("boo")
                 guard let slf = self else {
                     return
                 }
@@ -154,7 +154,6 @@ class DockerChannel  {
         syncQueue.sync {
             self.delegate = nil
             if let d = ioChannel {
-                print("Closing channel")
                 d.close()
             }
         }

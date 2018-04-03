@@ -10,6 +10,7 @@ import Foundation
 
 protocol DockerControllerDelegate: AnyObject {
     func dockerControllerReceivedInfo(info: DockerAPIResponseInfo)
+    func dockerControllerReceivedUnexpectedMessage(message: String)
 }
 
 class DockerController: DockerChannelDelegate {
@@ -37,7 +38,10 @@ class DockerController: DockerChannelDelegate {
     }
     
     func dockerChannelRecievedUnknownMessage(message: String) {
-        print("We got unexpected message: \(message)")
+        guard let delegate = delegate else {
+            return
+        }
+        delegate.dockerControllerReceivedUnexpectedMessage(message: message)
     }
     
     func dockerChannelReceivedInfo(info: DockerAPIResponseInfo) {
