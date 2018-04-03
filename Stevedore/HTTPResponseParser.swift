@@ -139,7 +139,7 @@ class HTTPResponseParser {
                 switch encoding {
                 case "chunked":
                     
-                    while buffer.count > 0 {
+                    while true {
                         let s = buffer.range(of: "\r\n")
                         guard let lengthSplit = s else {
                             throw HTTPResponseParserError.ChunkLengthMissing(buffer)

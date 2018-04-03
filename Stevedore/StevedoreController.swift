@@ -63,7 +63,6 @@ class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
     }
     
     func menuWillOpen(_ menu: NSMenu) {
-        print("menu will open")
         do {
             try docker.requestInfo()
         } catch {
@@ -71,6 +70,5 @@ class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
             self.statusItem.image = self.unhealthyIcon
             self.infoMenuItem.title = "Docker Status: Uncommincative"
         }
-        print("done")
     }
 }

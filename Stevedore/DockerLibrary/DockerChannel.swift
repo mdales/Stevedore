@@ -54,21 +54,29 @@ class DockerChannel  {
     var ioChannel: DispatchIO? = nil
     var fd: Int32? = -1
     
+    // Created in init, but captures self in callback
+    var parser: HTTPResponseParser!
+    
     init(channelPath: String = "/var/run/docker.sock") {
         self.channelPath = channelPath
+        self.parser = HTTPResponseParser(headersReadCallback: { (statusCode, headers) in
+            // todo
+        }, chunkReadCallback: { (body) in
+            self.decodeAPIResponse(raw: body)
+        })
     }
     
     func makeInfoAPICall() throws {
-        try syncQueue.sync {
-            guard let d = ioChannel else {
-                throw DockerChannelError.ChannelNotConnected
-            }
-            
-            let formattedString = "GET /v1.30/info HTTP/1.0\r\n\r\n"
+        guard let d = ioChannel else {
+            throw DockerChannelError.ChannelNotConnected
+        }
+        let sQueue = self.socket_queue
+        syncQueue.async {
+            let formattedString = "GET /v1.30/info HTTP/1.1\r\nHost: localhost\r\nConnection: keep-alive\r\n\r\n"
             let len = formattedString.withCString{ Int(strlen($0)) }
             formattedString.withCString {
                 let dd = DispatchData(bytes: UnsafeRawBufferPointer(start: $0, count: len))
-                d.write(offset: 0, data: dd, queue: socket_queue, ioHandler: { (b, d, r) in
+                d.write(offset: 0, data: dd, queue: sQueue, ioHandler: { (b, d, r) in
                     print(b)
                     print(r)
                 })
@@ -129,24 +137,11 @@ class DockerChannel  {
                     d.withUnsafeMutableBytes{(bytes: UnsafeMutablePointer<UInt8>)->Void in
                         b.copyBytes(to: bytes, count: b.count)
                     }
-                    let s = String(data: d, encoding: String.Encoding.utf8) as String?
-                    guard let response = s else {
-                        return
-                    }
-                    let parts = response.components(separatedBy:"\r\n\r\n")
-                    guard let delegate = slf.delegate else {
-                        return
-                    }
-                    slf.processing_queue.async {
-                        guard let apiResponse = try? JSONDecoder().decode(DockerAPIResponse.self, from: parts[1].data(using: .utf8)!) else {
-                            delegate.dockerChannelRecievedUnknownMessage(message: parts[1])
-                            return
-                        }
-                        print(apiResponse)
-                        switch apiResponse {
-                        case let .Info(val):
-                            delegate.dockerChannelReceivedInfo(info: val)
-                        }
+                    
+                    do {
+                        try slf.parser.processResponseData(responseData: d)
+                    } catch {
+                        // todo
                     }
                 }
             }
@@ -162,6 +157,22 @@ class DockerChannel  {
                 print("Closing channel")
                 d.close()
             }
+        }
+    }
+    
+    private func decodeAPIResponse(raw: String) {
+        
+        guard let delegate = delegate else {
+            return
+        }
+        
+        guard let apiResponse = try? JSONDecoder().decode(DockerAPIResponse.self, from: raw.data(using: .utf8)!) else {
+            delegate.dockerChannelRecievedUnknownMessage(message: raw)
+            return
+        }
+        switch apiResponse {
+            case let .Info(val):
+                delegate.dockerChannelReceivedInfo(info: val)
         }
     }
 }
