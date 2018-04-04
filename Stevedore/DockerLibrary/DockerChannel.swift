@@ -17,22 +17,34 @@ struct DockerAPIResponseInfo: Decodable {
     let Images: Int
 }
 
+struct DockerAPIResponseContainer: Decodable {
+    let Id : String
+    let Names: [String]
+    let Image: String
+    let ImageID: String
+    let State: String
+    let Created: Int
+}
+
 enum DockerAPIResponse: Decodable {
     case Info(DockerAPIResponseInfo)
+    case ContainerList([DockerAPIResponseContainer])
     
     init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
-        let info = try container.decode(DockerAPIResponseInfo.self)
-        self = .Info(info)
-//        } catch {
-//            let inf = try container.decode(InfoStruct.self)
-//            self = .Info(inf)
-//        }
+        do {
+            let info = try container.decode(DockerAPIResponseInfo.self)
+            self = .Info(info)
+        } catch {
+            let list = try container.decode([DockerAPIResponseContainer].self)
+            self = .ContainerList(list)
+        }
     }
 }
 
 protocol DockerChannelDelegate: AnyObject {
     func dockerChannelReceivedInfo(info: DockerAPIResponseInfo)
+    func dockerChannelReceviedContainerList(list: [DockerAPIResponseContainer])
     func dockerChannelRecievedUnknownMessage(message: String)
 }
 
@@ -67,16 +79,31 @@ class DockerChannel  {
     }
     
     func makeInfoAPICall() throws {
-        guard let d = ioChannel else {
-            throw DockerChannelError.ChannelNotConnected
-        }
-        let sQueue = self.socket_queue
-        syncQueue.async {
+        try syncQueue.sync {
+            guard let d = ioChannel else {
+                throw DockerChannelError.ChannelNotConnected
+            }
             let formattedString = "GET /v1.30/info HTTP/1.1\r\nHost: localhost\r\nConnection: keep-alive\r\n\r\n"
             let len = formattedString.withCString{ Int(strlen($0)) }
             formattedString.withCString {
                 let dd = DispatchData(bytes: UnsafeRawBufferPointer(start: $0, count: len))
-                d.write(offset: 0, data: dd, queue: sQueue, ioHandler: { (b, d, r) in
+                d.write(offset: 0, data: dd, queue: socket_queue, ioHandler: { (b, d, r) in
+                    // todo
+                })
+            }
+        }
+    }
+    
+    func makeContainersAPICall() throws {
+        try syncQueue.sync {
+            guard let d = ioChannel else {
+                throw DockerChannelError.ChannelNotConnected
+            }
+            let formattedString = "GET /v1.30/info HTTP/1.1\r\nHost: localhost\r\nConnection: keep-alive\r\n\r\n"
+            let len = formattedString.withCString{ Int(strlen($0)) }
+            formattedString.withCString {
+                let dd = DispatchData(bytes: UnsafeRawBufferPointer(start: $0, count: len))
+                d.write(offset: 0, data: dd, queue: socket_queue, ioHandler: { (b, d, r) in
                     // todo
                 })
             }
@@ -125,9 +152,7 @@ class DockerChannel  {
             d.setLimit(lowWater: 1)
 
             d.read(offset: 0, length: Int.max, queue: socket_queue) { [weak self] (a, b, c) in
-                guard let slf = self else {
-                    return
-                }
+                guard let slf = self else { return }
                 
                 if let b = b {
                     guard b.count > 0 else {
@@ -172,6 +197,8 @@ class DockerChannel  {
         switch apiResponse {
             case let .Info(val):
                 delegate.dockerChannelReceivedInfo(info: val)
+            case let .ContainerList(val):
+                delegate.dockerChannelReceviedContainerList(list: val)
         }
     }
 }

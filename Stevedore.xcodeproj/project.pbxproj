@@ -15,7 +15,6 @@
 		4C355B9A20654B210020798B /* StevedoreController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C355B9920654B210020798B /* StevedoreController.swift */; };
 		4C7EBF9920655BFB00A98CDB /* DockerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7EBF9820655BFB00A98CDB /* DockerController.swift */; };
 		4CEABC24206D1DF50054F38C /* HTTPResponseParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CEABC23206D1DF50054F38C /* HTTPResponseParser.swift */; };
-		4CEABC25206D1DF50054F38C /* HTTPResponseParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CEABC23206D1DF50054F38C /* HTTPResponseParser.swift */; };
 		4CEABC27206D1E220054F38C /* HTTPResponseParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CEABC26206D1E220054F38C /* HTTPResponseParserTests.swift */; };
 /* End PBXBuildFile section */
 
@@ -69,6 +68,7 @@
 			children = (
 				4C7EBF9820655BFB00A98CDB /* DockerController.swift */,
 				4C13062D2066C66B00D55183 /* DockerChannel.swift */,
+				4CEABC23206D1DF50054F38C /* HTTPResponseParser.swift */,
 			);
 			path = DockerLibrary;
 			sourceTree = "<group>";
@@ -102,7 +102,6 @@
 				4C355B81206536DE0020798B /* MainMenu.xib */,
 				4C355B84206536DE0020798B /* Info.plist */,
 				4C355B85206536DE0020798B /* Stevedore.entitlements */,
-				4CEABC23206D1DF50054F38C /* HTTPResponseParser.swift */,
 			);
 			path = Stevedore;
 			sourceTree = "<group>";
@@ -243,7 +242,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4C355B8F206536DE0020798B /* StevedoreTests.swift in Sources */,
-				4CEABC25206D1DF50054F38C /* HTTPResponseParser.swift in Sources */,
 				4CEABC27206D1E220054F38C /* HTTPResponseParserTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

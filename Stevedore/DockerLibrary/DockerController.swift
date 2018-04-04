@@ -51,4 +51,10 @@ class DockerController: DockerChannelDelegate {
         delegate.dockerControllerReceivedInfo(info: info)
     }
 
+    func dockerChannelReceviedContainerList(list: [DockerAPIResponseContainer]) {
+        guard let delegate = delegate else {
+            return
+        }
+        // todo
+    }
 }
