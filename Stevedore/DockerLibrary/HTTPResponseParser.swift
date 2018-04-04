@@ -142,7 +142,8 @@ class HTTPResponseParser {
                     while true {
                         let s = buffer.range(of: "\r\n")
                         guard let lengthSplit = s else {
-                            throw HTTPResponseParserError.ChunkLengthMissing(buffer)
+                            // assume we've not got enough data yet. Could do some sanity check here in future
+                            break loop
                         }
                         let lengthString = buffer[..<lengthSplit.lowerBound]
                         let l = Int(lengthString, radix: 16)
@@ -151,6 +152,10 @@ class HTTPResponseParser {
                         }
                         
                         if length == 0 {
+                            // do we have the final \r\n yet?, if not, try again when we get more data
+                            if buffer.distance(from: lengthSplit.upperBound, to: buffer.endIndex) == 0 {
+                                break loop
+                            }
                             let newStart = buffer.index(lengthSplit.upperBound, offsetBy: 1)
                             buffer = String(buffer[newStart...])
                             resetState()
@@ -158,6 +163,11 @@ class HTTPResponseParser {
                         }
                         
                         let contentStart = lengthSplit.upperBound
+                        // The +1 here is to allow for the \r\n termination of the chunk
+                        if buffer.distance(from: contentStart, to: buffer.endIndex) < (length + 1) {
+                            // not enough data yet, so try again later
+                            break loop
+                        }
                         let contentEnd = buffer.index(contentStart, offsetBy:length)
                         
                         let content = String(buffer[contentStart..<contentEnd])
@@ -165,8 +175,12 @@ class HTTPResponseParser {
                             callback(content)
                         }
                         
-                        let newStart = buffer.index(after:contentEnd)
-                        buffer = String(buffer[newStart...])
+                        if buffer.distance(from: contentEnd, to: buffer.endIndex) > 0 {
+                            let newStart = buffer.index(after:contentEnd)
+                            buffer = String(buffer[newStart...])
+                        } else {
+                            buffer = ""
+                        }
                     }
                     
                     
@@ -190,8 +204,12 @@ class HTTPResponseParser {
                         }
                         
                         // the end of the content should have a \r\n\r\n on it?
-                        let newStart = buffer.index(after:buffer.index(after:contentEnd))
-                        buffer = String(buffer[newStart...])
+                        if buffer.distance(from: contentEnd, to: buffer.endIndex) > 0 {
+                            let newStart = buffer.index(after:contentEnd)
+                            buffer = String(buffer[newStart...])
+                        } else {
+                            buffer = ""
+                        }
                         resetState()
                         
                     } else {

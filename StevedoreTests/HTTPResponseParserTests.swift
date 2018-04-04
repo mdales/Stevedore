@@ -123,7 +123,7 @@ class HTTPResponseParserTests: XCTestCase {
     
     func testSimpleContentLengthParsing() {
         
-        let responseString = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length: 13\r\n\r\nHello, world!\r\n\r\n"
+        let responseString = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length: 13\r\n\r\nHello, world!"
         let headerExpectation = expectation(description: "Header callback called")
         let bodyExpectation = expectation(description: "Body callback called")
         
@@ -174,7 +174,7 @@ class HTTPResponseParserTests: XCTestCase {
     
     func testMultipleResponses() {
         
-        let responseString = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length: 13\r\n\r\nHello, world!\r\n\r\n"
+        let responseString = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length: 13\r\n\r\nHello, world!"
         let headerExpectation = expectation(description: "Header callback called")
         headerExpectation.expectedFulfillmentCount = 2
         let bodyExpectation = expectation(description: "Body callback called")
@@ -227,5 +227,40 @@ class HTTPResponseParserTests: XCTestCase {
         }
         
         XCTAssertEqual(content, "helloworld")
+    }
+    
+    func testIncrementalChunkedResponse() {
+        
+        let responseString = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nTransfer-Encoding: chunked\r\n\r\n5\r\nhello\r\n5\r\nworld\r\n0\r\n\r\n"
+        let headerExpectation = expectation(description: "Header callback called")
+        let bodyExpectation = expectation(description: "Body callback called")
+        bodyExpectation.expectedFulfillmentCount = 2
+        
+        var content = ""
+        
+        let parser = HTTPResponseParser(headersReadCallback: { (statusCode: Int, headers: [String:String]) in
+            XCTAssertEqual(statusCode, 200)
+            XCTAssertEqual(headers.count, 2)
+            headerExpectation.fulfill()
+        },
+        chunkReadCallback: { (body: String) in
+            content += body
+            bodyExpectation.fulfill()
+        })
+        
+        for char in responseString {
+            let charStr = "\(char)"
+            XCTAssertNoThrow(try parser.processResponseData(responseData: charStr.data(using: .utf8)!))
+        }
+        
+        waitForExpectations(timeout: 1) { (error) in
+            if let error = error {
+                XCTFail("Failed \(error)")
+            }
+        }
+        
+        XCTAssertEqual(content, "helloworld")
+        
+        XCTAssertEqual(parser.count, 0)
     }
 }

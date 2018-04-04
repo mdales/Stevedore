@@ -17,15 +17,15 @@ class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
     
     static let logger = OSLog(subsystem: "com.digitalflapjack.stevedore", category: "general")
     
-    let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
     let docker = DockerController()
-    
-    var latestDockerInfo: DockerAPIResponseInfo? = nil
-    
     let healthyIcon: NSImage
     let activeIcon: NSImage
     let unknownIcon: NSImage
     let unhealthyIcon: NSImage
+    
+    // Only access on main thread
+    let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+    var containerMenuItems = [NSMenuItem]()
     
     override init() {
         self.healthyIcon = StevedoreController.makeIcon(color: NSColor.black)
@@ -98,13 +98,39 @@ class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
         }
     }
     
+    func dockerControllerReceivedContainerList(list: [DockerAPIResponseContainer]) {
+        DispatchQueue.main.async { [unowned self] in
+            
+            // tear down what we have now
+            for containerMenu in self.containerMenuItems {
+                self.statusMenu.removeItem(containerMenu)
+            }
+//            self.containerMenuItems.removeAll()
+            
+            self.containerMenuItems = list.map({ (containerInfo) -> NSMenuItem in
+                var name = containerInfo.Id
+                if let propername = containerInfo.Names.first {
+                    name = propername
+                }
+                
+                let newItem = NSMenuItem(title: name, action: nil, keyEquivalent: "")
+                
+                return newItem
+            })
+            
+            for containerMenu in self.containerMenuItems {
+                self.statusMenu.insertItem(containerMenu, at: self.statusMenu.items.count - 2)
+            }
+        }
+    }
+    
     func dockerControllerReceivedUnexpectedMessage(message: String) {
         os_log("Received unexpected message from Docker: %s", log: StevedoreController.logger, type: .info, message)
     }
     
     func menuWillOpen(_ menu: NSMenu) {
         do {
-            try docker.requestInfo()
+            try docker.requestContainers()
         } catch {
             os_log("Failed to talk to docker: %s", log: StevedoreController.logger, type: .error, error.localizedDescription)
             self.statusItem.image = self.unhealthyIcon

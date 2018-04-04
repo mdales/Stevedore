@@ -99,7 +99,7 @@ class DockerChannel  {
             guard let d = ioChannel else {
                 throw DockerChannelError.ChannelNotConnected
             }
-            let formattedString = "GET /v1.30/info HTTP/1.1\r\nHost: localhost\r\nConnection: keep-alive\r\n\r\n"
+            let formattedString = "GET /v1.30/containers/json HTTP/1.1\r\nHost: localhost\r\nConnection: keep-alive\r\n\r\n"
             let len = formattedString.withCString{ Int(strlen($0)) }
             formattedString.withCString {
                 let dd = DispatchData(bytes: UnsafeRawBufferPointer(start: $0, count: len))
@@ -152,7 +152,7 @@ class DockerChannel  {
             d.setLimit(lowWater: 1)
 
             d.read(offset: 0, length: Int.max, queue: socket_queue) { [weak self] (a, b, c) in
-                guard let slf = self else { return }
+                guard let `self` = self else { return }
                 
                 if let b = b {
                     guard b.count > 0 else {
@@ -164,7 +164,7 @@ class DockerChannel  {
                     }
                     
                     do {
-                        try slf.parser.processResponseData(responseData: d)
+                        try self.parser.processResponseData(responseData: d)
                     } catch {
                         // todo
                     }

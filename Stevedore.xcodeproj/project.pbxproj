@@ -14,6 +14,7 @@
 		4C355B8F206536DE0020798B /* StevedoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C355B8E206536DE0020798B /* StevedoreTests.swift */; };
 		4C355B9A20654B210020798B /* StevedoreController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C355B9920654B210020798B /* StevedoreController.swift */; };
 		4C7EBF9920655BFB00A98CDB /* DockerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7EBF9820655BFB00A98CDB /* DockerController.swift */; };
+		4CE32C082074E73F001D2D1D /* HTTPResponseParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CEABC23206D1DF50054F38C /* HTTPResponseParser.swift */; };
 		4CEABC24206D1DF50054F38C /* HTTPResponseParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CEABC23206D1DF50054F38C /* HTTPResponseParser.swift */; };
 		4CEABC27206D1E220054F38C /* HTTPResponseParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CEABC26206D1E220054F38C /* HTTPResponseParserTests.swift */; };
 /* End PBXBuildFile section */
@@ -241,6 +242,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4CE32C082074E73F001D2D1D /* HTTPResponseParser.swift in Sources */,
 				4C355B8F206536DE0020798B /* StevedoreTests.swift in Sources */,
 				4CEABC27206D1E220054F38C /* HTTPResponseParserTests.swift in Sources */,
 			);
