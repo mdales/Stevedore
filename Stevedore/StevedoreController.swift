@@ -106,7 +106,6 @@ class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
             for containerMenu in self.containerMenuItems {
                 self.statusMenu.removeItem(containerMenu)
             }
-//            self.containerMenuItems.removeAll()
             
             self.containerMenuItems = list.map({ (containerInfo) -> NSMenuItem in
                 var name = containerInfo.Id
