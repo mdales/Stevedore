@@ -99,6 +99,7 @@ class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
     }
     
     func dockerControllerReceivedContainerList(list: [DockerAPIResponseContainer]) {
+        print("\(list)")
         DispatchQueue.main.async { [unowned self] in
             
             // tear down what we have now
@@ -109,8 +110,20 @@ class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
             
             self.containerMenuItems = list.map({ (containerInfo) -> NSMenuItem in
                 var name = containerInfo.Id
-                if let propername = containerInfo.Names.first {
-                    name = propername
+                
+                // Docker containers list API will return not the human name, but a list of names used by both
+                // humans and other containers of the form:
+                // ["/other-container/hostname-for-this-container", "/actual-container-name"]
+                // Which is useful for building a dependancy graph from the one call, but less good for building
+                // just a UI like ours simply. The below algorithm is just a minimal hack to get something pretty
+                // until we build a better model
+                
+                // the closed to human name seems to be the last one typically
+                if let finalname = containerInfo.Names.last {
+                    let parts = finalname.split(separator: "/")
+                    if let end_substring = parts.last {
+                        name = String(end_substring)
+                    }
                 }
                 
                 let newItem = NSMenuItem(title: name, action: nil, keyEquivalent: "")
