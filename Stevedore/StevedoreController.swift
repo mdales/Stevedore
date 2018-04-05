@@ -99,7 +99,6 @@ class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
     }
     
     func dockerControllerReceivedContainerList(list: [DockerAPIResponseContainer]) {
-        print("\(list)")
         DispatchQueue.main.async { [unowned self] in
             
             // tear down what we have now
@@ -117,11 +116,11 @@ class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
                 // just a UI like ours simply. The below algorithm is just a minimal hack to get something pretty
                 // until we build a better model
                 
-                // the closed to human name seems to be the last one typically
-                if let finalname = containerInfo.Names.last {
-                    let parts = finalname.split(separator: "/")
-                    if let end_substring = parts.last {
-                        name = String(end_substring)
+                for protoname in containerInfo.Names {
+                    let parts = protoname.split(separator: "/")
+                    if parts.count == 1 {
+                        name = String(parts[0])
+                        break
                     }
                 }
                 
