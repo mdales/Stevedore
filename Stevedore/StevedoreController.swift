@@ -125,6 +125,8 @@ class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
                 }
                 
                 let newItem = NSMenuItem(title: name, action: nil, keyEquivalent: "")
+                print(containerInfo.State)
+                newItem.state = containerInfo.State == "running" ? .on : .off
                 
                 return newItem
             })

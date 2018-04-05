@@ -99,7 +99,7 @@ class DockerChannel  {
             guard let d = ioChannel else {
                 throw DockerChannelError.ChannelNotConnected
             }
-            let formattedString = "GET /v1.30/containers/json HTTP/1.1\r\nHost: localhost\r\nConnection: keep-alive\r\n\r\n"
+            let formattedString = "GET /v1.30/containers/json?all=true HTTP/1.1\r\nHost: localhost\r\nConnection: keep-alive\r\n\r\n"
             let len = formattedString.withCString{ Int(strlen($0)) }
             formattedString.withCString {
                 let dd = DispatchData(bytes: UnsafeRawBufferPointer(start: $0, count: len))
