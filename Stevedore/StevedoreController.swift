@@ -51,7 +51,7 @@ class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
         } catch {
             os_log("Error talking to Docker: %s", log: StevedoreController.logger, type: .error, error.localizedDescription)
             statusItem.image = self.unhealthyIcon
-            self.infoMenuItem.title = "Docker Status: Uncommincative"
+            self.infoMenuItem.title = "Docker Status: Uncommunicative"
         }
     }
     
@@ -74,7 +74,7 @@ class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
                 os_log("Error talking to Docker: %s", log: StevedoreController.logger, type: .error, error.localizedDescription)
                 DispatchQueue.main.async { [unowned self] in
                     self.statusItem.image = self.unhealthyIcon
-                    self.infoMenuItem.title = "Docker Status: Uncommincative"
+                    self.infoMenuItem.title = "Docker Status: Uncommunicative"
                 }
             }
         }
@@ -143,7 +143,7 @@ class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
         } catch {
             os_log("Failed to talk to docker: %s", log: StevedoreController.logger, type: .error, error.localizedDescription)
             self.statusItem.image = self.unhealthyIcon
-            self.infoMenuItem.title = "Docker Status: Uncommincative"
+            self.infoMenuItem.title = "Docker Status: Uncommunicative"
         }
     }
     
@@ -158,7 +158,7 @@ class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
         } catch {
             os_log("Failed to talk to docker: %s", log: StevedoreController.logger, type: .error, error.localizedDescription)
             self.statusItem.image = self.unhealthyIcon
-            self.infoMenuItem.title = "Docker Status: Uncommincative"
+            self.infoMenuItem.title = "Docker Status: Uncommunicative"
         }
     }
     
@@ -173,7 +173,7 @@ class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
         } catch {
             os_log("Failed to talk to docker: %s", log: StevedoreController.logger, type: .error, error.localizedDescription)
             self.statusItem.image = self.unhealthyIcon
-            self.infoMenuItem.title = "Docker Status: Uncommincative"
+            self.infoMenuItem.title = "Docker Status: Uncommunicative"
         }
     }
 }
