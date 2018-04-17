@@ -26,9 +26,14 @@ struct DockerAPIResponseContainer: Decodable {
     let Created: Int
 }
 
+struct DockerGenericMessageResponse: Decodable {
+    let message: String
+}
+
 enum DockerAPIResponse: Decodable {
     case Info(DockerAPIResponseInfo)
     case ContainerList([DockerAPIResponseContainer])
+    case GenericMessage(DockerGenericMessageResponse)
     
     init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
@@ -36,16 +41,22 @@ enum DockerAPIResponse: Decodable {
             let info = try container.decode(DockerAPIResponseInfo.self)
             self = .Info(info)
         } catch {
-            let list = try container.decode([DockerAPIResponseContainer].self)
-            self = .ContainerList(list)
+            do {
+                let list = try container.decode([DockerAPIResponseContainer].self)
+                self = .ContainerList(list)
+            } catch {
+                let message = try container.decode(DockerGenericMessageResponse.self)
+                self = .GenericMessage(message)
+            }
         }
     }
 }
 
 protocol DockerChannelDelegate: AnyObject {
     func dockerChannelReceivedInfo(info: DockerAPIResponseInfo)
-    func dockerChannelReceviedContainerList(list: [DockerAPIResponseContainer])
-    func dockerChannelRecievedUnknownMessage(message: String)
+    func dockerChannelReceivedContainerList(list: [DockerAPIResponseContainer])
+    func dockerChannelReceivedGenericMessage(message: DockerGenericMessageResponse)
+    func dockerChannelReceivedUnknownMessage(message: String)
 }
 
 enum DockerChannelError: Error {
@@ -72,34 +83,17 @@ class DockerChannel  {
     init(channelPath: String = "/var/run/docker.sock") {
         self.channelPath = channelPath
         self.parser = HTTPResponseParser(headersReadCallback: { (statusCode, headers) in
-            // todo
         }, chunkReadCallback: { (body) in
             self.decodeAPIResponse(raw: body)
         })
     }
     
-    func makeInfoAPICall() throws {
+    func makeAPICall(path: String, method: String = "GET") throws {
         try syncQueue.sync {
             guard let d = ioChannel else {
                 throw DockerChannelError.ChannelNotConnected
             }
-            let formattedString = "GET /v1.30/info HTTP/1.1\r\nHost: localhost\r\nConnection: keep-alive\r\n\r\n"
-            let len = formattedString.withCString{ Int(strlen($0)) }
-            formattedString.withCString {
-                let dd = DispatchData(bytes: UnsafeRawBufferPointer(start: $0, count: len))
-                d.write(offset: 0, data: dd, queue: socket_queue, ioHandler: { (b, d, r) in
-                    // todo
-                })
-            }
-        }
-    }
-    
-    func makeContainersAPICall() throws {
-        try syncQueue.sync {
-            guard let d = ioChannel else {
-                throw DockerChannelError.ChannelNotConnected
-            }
-            let formattedString = "GET /v1.30/containers/json?all=true HTTP/1.1\r\nHost: localhost\r\nConnection: keep-alive\r\n\r\n"
+            let formattedString = "\(method) /v1.30\(path) HTTP/1.1\r\nHost: localhost\r\nConnection: keep-alive\r\n\r\n"
             let len = formattedString.withCString{ Int(strlen($0)) }
             formattedString.withCString {
                 let dd = DispatchData(bytes: UnsafeRawBufferPointer(start: $0, count: len))
@@ -191,14 +185,16 @@ class DockerChannel  {
         }
         
         guard let apiResponse = try? JSONDecoder().decode(DockerAPIResponse.self, from: raw.data(using: .utf8)!) else {
-            delegate.dockerChannelRecievedUnknownMessage(message: raw)
+            delegate.dockerChannelReceivedUnknownMessage(message: raw)
             return
         }
         switch apiResponse {
             case let .Info(val):
                 delegate.dockerChannelReceivedInfo(info: val)
             case let .ContainerList(val):
-                delegate.dockerChannelReceviedContainerList(list: val)
+                delegate.dockerChannelReceivedContainerList(list: val)
+            case let .GenericMessage(val):
+                delegate.dockerChannelReceivedGenericMessage(message: val)
         }
     }
 }

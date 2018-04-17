@@ -47,7 +47,7 @@ class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
         
         do {
             try docker.connect(delegate: self)
-            try docker.requestInfo()
+            try docker.requestDockerInfo()
         } catch {
             os_log("Error talking to Docker: %s", log: StevedoreController.logger, type: .error, error.localizedDescription)
             statusItem.image = self.unhealthyIcon
@@ -69,7 +69,7 @@ class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
         DispatchQueue.global().asyncAfter(deadline: deadline) { [unowned self] in
             
             do {
-                try self.docker.requestInfo()
+                try self.docker.requestDockerInfo()
             } catch {
                 os_log("Error talking to Docker: %s", log: StevedoreController.logger, type: .error, error.localizedDescription)
                 DispatchQueue.main.async { [unowned self] in
@@ -110,17 +110,16 @@ class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
                 newItem.state = containerInfo.State == "running" ? .on : .off
                 
                 let submenu = NSMenu(title: "")
+                submenu.autoenablesItems = false
                 let runMenu = NSMenuItem(title: "Run", action: #selector(self.runContainer), keyEquivalent: "")
+                runMenu.representedObject = containerInfo
+                runMenu.target = self
                 runMenu.isEnabled = containerInfo.State != "running"
-                runMenu.identifier = NSUserInterfaceItemIdentifier(containerInfo.Id)
                 submenu.addItem(runMenu)
-                let pauseMenu = NSMenuItem(title: "Pause", action: nil, keyEquivalent: "")
-                pauseMenu.isEnabled = containerInfo.State == "running"
-                pauseMenu.identifier = NSUserInterfaceItemIdentifier(containerInfo.Id)
-                submenu.addItem(pauseMenu)
-                let stopMenu = NSMenuItem(title: "Stop", action: nil, keyEquivalent: "")
+                let stopMenu = NSMenuItem(title: "Stop", action: #selector(self.stopContainer), keyEquivalent: "")
+                stopMenu.representedObject = containerInfo
+                stopMenu.target = self
                 stopMenu.isEnabled = containerInfo.State == "running"
-                stopMenu.identifier = NSUserInterfaceItemIdentifier(containerInfo.Id)
                 submenu.addItem(stopMenu)
                 
                 newItem.submenu = submenu
@@ -140,7 +139,7 @@ class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
     
     func menuWillOpen(_ menu: NSMenu) {
         do {
-            try docker.requestContainers()
+            try docker.requestContainerInfo()
         } catch {
             os_log("Failed to talk to docker: %s", log: StevedoreController.logger, type: .error, error.localizedDescription)
             self.statusItem.image = self.unhealthyIcon
@@ -149,15 +148,32 @@ class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
     }
     
     @objc func runContainer(sender: NSMenuItem) {
-//        guard let menuIdentifier = sender.identifier else {
-//            return
-//        }
-//        let containerID = menuIdentifier as String
-    }
-    
-    @objc func pauseContainer(sender: NSMenuItem) {
+        guard let containerInfo = sender.representedObject as! DockerAPIResponseContainer? else {
+            os_log("Failed to cast container record", log: StevedoreController.logger, type: .error)
+            return
+        }
+
+        do {
+            try docker.startContainer(containerId: containerInfo.Id)
+        } catch {
+            os_log("Failed to talk to docker: %s", log: StevedoreController.logger, type: .error, error.localizedDescription)
+            self.statusItem.image = self.unhealthyIcon
+            self.infoMenuItem.title = "Docker Status: Uncommincative"
+        }
     }
     
     @objc func stopContainer(sender: NSMenuItem) {
+        guard let containerInfo = sender.representedObject as! DockerAPIResponseContainer? else {
+            os_log("Failed to cast container record", log: StevedoreController.logger, type: .error)
+            return
+        }
+        
+        do {
+            try docker.stopContainer(containerId: containerInfo.Id)
+        } catch {
+            os_log("Failed to talk to docker: %s", log: StevedoreController.logger, type: .error, error.localizedDescription)
+            self.statusItem.image = self.unhealthyIcon
+            self.infoMenuItem.title = "Docker Status: Uncommincative"
+        }
     }
 }

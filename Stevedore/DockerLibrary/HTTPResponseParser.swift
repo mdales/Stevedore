@@ -128,6 +128,11 @@ class HTTPResponseParser {
                 callbackQueue.async {
                     callback(statusCode, headersCopy)
                 }
+                
+                if statusCode == 204 {
+                    // HTTP 204 means no content
+                    resetState()
+                }
             } else {
                 // this is expected to be content
                 let callback = self.chunkReadCallback

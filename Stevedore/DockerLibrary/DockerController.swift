@@ -34,15 +34,23 @@ class DockerController: DockerChannelDelegate {
         }
     }
     
-    func requestInfo() throws {
-        try channel.makeInfoAPICall()
+    func requestDockerInfo() throws {
+        try channel.makeAPICall(path: "/info")
     }
     
-    func requestContainers() throws {
-        try channel.makeContainersAPICall()
+    func requestContainerInfo() throws {
+        try channel.makeAPICall(path: "/containers/json?all=true")
     }
     
-    func dockerChannelRecievedUnknownMessage(message: String) {
+    func startContainer(containerId: String) throws {
+        try channel.makeAPICall(path: "/containers/\(containerId)/start", method: "POST")
+    }
+    
+    func stopContainer(containerId: String) throws {
+        try channel.makeAPICall(path: "/containers/\(containerId)/stop", method: "POST")
+    }
+    
+    func dockerChannelReceivedUnknownMessage(message: String) {
         guard let delegate = delegate else {
             return
         }
@@ -56,10 +64,14 @@ class DockerController: DockerChannelDelegate {
         delegate.dockerControllerReceivedInfo(info: info)
     }
 
-    func dockerChannelReceviedContainerList(list: [DockerAPIResponseContainer]) {
+    func dockerChannelReceivedContainerList(list: [DockerAPIResponseContainer]) {
         guard let delegate = delegate else {
             return
         }
         delegate.dockerControllerReceivedContainerList(list: list)
+    }
+    
+    func dockerChannelReceivedGenericMessage(message: DockerGenericMessageResponse) {
+        print(message.message)
     }
 }
