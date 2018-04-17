@@ -18,40 +18,22 @@ class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
     static let logger = OSLog(subsystem: "com.digitalflapjack.stevedore", category: "general")
     
     let docker = DockerController()
-    let healthyIcon: NSImage
-    let activeIcon: NSImage
-    let unknownIcon: NSImage
-    let unhealthyIcon: NSImage
+    let healthyIcon: NSImage?
+    let activeIcon: NSImage?
+    let unknownIcon: NSImage?
+    let unhealthyIcon: NSImage?
     
     // Only access on main thread
     let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
     var containerMenuItems = [NSMenuItem]()
     
     override init() {
-        self.healthyIcon = StevedoreController.makeIcon(color: NSColor.black)
-        self.activeIcon = StevedoreController.makeIcon(color: NSColor.green)
-        self.unknownIcon = StevedoreController.makeIcon(color: NSColor.gray)
-        self.unhealthyIcon = StevedoreController.makeIcon(color: NSColor.red)
-    }
-    
-    // As a UX choice colour on the status bar is not a good idea for many reasons (colour blindness, it's visually
-    // distracting, and so forth), but this is just a simple test for now, and we'll make something better later.
-    class func makeIcon(color: NSColor) -> NSImage {
-        let area = NSRect(x: 0, y: 0, width: 22, height: 22)
-        let image = NSImage(size: area.size)
-        image.lockFocus()
-        NSColor.clear.setFill()
-        let rect = NSBezierPath(rect: area)
-        rect.fill()
-        color.setStroke()
-        let lineWidth: CGFloat = 3.0
-        let smallerArea = NSRect(x: area.origin.x + lineWidth, y: area.origin.y + lineWidth,
-                                 width: area.size.width - (2 * lineWidth), height: area.size.height - (2 * lineWidth))
-        let circle = NSBezierPath(ovalIn: smallerArea)
-        circle.lineWidth = lineWidth
-        circle.stroke()
-        image.unlockFocus()
-        return image
+        self.healthyIcon = NSImage(named: NSImage.Name("status-healthy"))
+        self.healthyIcon?.isTemplate = true
+        self.activeIcon = NSImage(named: NSImage.Name("status-active"))
+        self.activeIcon?.isTemplate = true
+        self.unknownIcon = NSImage(named: NSImage.Name("status-unknown"))
+        self.unhealthyIcon = NSImage(named: NSImage.Name("status-unhealthy"))
     }
     
     @IBAction func quitCommand(_ sender: Any) {
@@ -125,8 +107,23 @@ class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
                 }
                 
                 let newItem = NSMenuItem(title: name, action: nil, keyEquivalent: "")
-                print(containerInfo.State)
                 newItem.state = containerInfo.State == "running" ? .on : .off
+                
+                let submenu = NSMenu(title: "")
+                let runMenu = NSMenuItem(title: "Run", action: #selector(self.runContainer), keyEquivalent: "")
+                runMenu.isEnabled = containerInfo.State != "running"
+                runMenu.identifier = NSUserInterfaceItemIdentifier(containerInfo.Id)
+                submenu.addItem(runMenu)
+                let pauseMenu = NSMenuItem(title: "Pause", action: nil, keyEquivalent: "")
+                pauseMenu.isEnabled = containerInfo.State == "running"
+                pauseMenu.identifier = NSUserInterfaceItemIdentifier(containerInfo.Id)
+                submenu.addItem(pauseMenu)
+                let stopMenu = NSMenuItem(title: "Stop", action: nil, keyEquivalent: "")
+                stopMenu.isEnabled = containerInfo.State == "running"
+                stopMenu.identifier = NSUserInterfaceItemIdentifier(containerInfo.Id)
+                submenu.addItem(stopMenu)
+                
+                newItem.submenu = submenu
                 
                 return newItem
             })
@@ -149,5 +146,18 @@ class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
             self.statusItem.image = self.unhealthyIcon
             self.infoMenuItem.title = "Docker Status: Uncommincative"
         }
+    }
+    
+    @objc func runContainer(sender: NSMenuItem) {
+//        guard let menuIdentifier = sender.identifier else {
+//            return
+//        }
+//        let containerID = menuIdentifier as String
+    }
+    
+    @objc func pauseContainer(sender: NSMenuItem) {
+    }
+    
+    @objc func stopContainer(sender: NSMenuItem) {
     }
 }
