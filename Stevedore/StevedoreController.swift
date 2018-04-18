@@ -116,6 +116,11 @@ class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
                 runMenu.target = self
                 runMenu.isEnabled = containerInfo.State != "running"
                 submenu.addItem(runMenu)
+                let attachMenu = NSMenuItem(title: "Attach terminal...", action: #selector(self.attachContainer), keyEquivalent: "")
+                attachMenu.representedObject = containerInfo
+                attachMenu.target = self
+                attachMenu.isEnabled = containerInfo.State == "running"
+                submenu.addItem(attachMenu)
                 let stopMenu = NSMenuItem(title: "Stop", action: #selector(self.stopContainer), keyEquivalent: "")
                 stopMenu.representedObject = containerInfo
                 stopMenu.target = self
@@ -159,6 +164,31 @@ class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
             os_log("Failed to talk to docker: %s", log: StevedoreController.logger, type: .error, error.localizedDescription)
             self.statusItem.image = self.unhealthyIcon
             self.infoMenuItem.title = "Docker Status: Uncommunicative"
+        }
+    }
+    
+    @objc func attachContainer(sender: NSMenuItem) {
+        guard let containerInfo = sender.representedObject as! DockerAPIResponseContainer? else {
+            os_log("Failed to cast container record", log: StevedoreController.logger, type: .error)
+            return
+        }
+        
+        // there has to be a better way to do this than using applescript?
+        let containerId = containerInfo.Id
+        let attachScript = """
+tell application "terminal"
+    activate
+    do script "docker attach \(containerId)"
+end tell
+"""
+        var error: NSDictionary?
+        guard let scriptObject = NSAppleScript(source: attachScript) else {
+            os_log("Failed to create applescript", log: StevedoreController.logger, type: .error)
+            return
+        }
+        scriptObject.executeAndReturnError(&error)
+        if let actualError = error {
+            os_log("Failed to execute applescript: %s", log: StevedoreController.logger, type: .error, actualError)
         }
     }
     
