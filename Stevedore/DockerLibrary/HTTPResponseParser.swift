@@ -129,7 +129,7 @@ class HTTPResponseParser {
                     callback(statusCode, headersCopy)
                 }
                 
-                if statusCode == 204 {
+                if (statusCode == 204) || (statusCode == 205) {
                     // HTTP 204 means no content
                     resetState()
                 }

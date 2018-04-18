@@ -274,8 +274,32 @@ class HTTPResponseParserTests: XCTestCase {
         let parser = HTTPResponseParser(headersReadCallback: { (statusCode: Int, headers: [String:String]) in
             headerExpectation.fulfill()
         },
-        chunkReadCallback: { (body: String) in
-            bodyExpectation.fulfill()
+                                        chunkReadCallback: { (body: String) in
+                                            bodyExpectation.fulfill()
+        })
+        
+        XCTAssertNoThrow(try parser.processResponseData(responseData: responseString1.data(using: .utf8)!))
+        XCTAssertNoThrow(try parser.processResponseData(responseData: responseString2.data(using: .utf8)!))
+        
+        waitForExpectations(timeout: 1) { (error) in
+            if let error = error {
+                XCTFail("Failed \(error)")
+            }
+        }
+    }
+    
+    func test205ResetContentResponse() {
+        let responseString1 = "HTTP/1.1 205 OK\r\n\r\n"
+        let responseString2 = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length: 13\r\n\r\nHello, world!"
+        let headerExpectation = expectation(description: "Header callback called")
+        headerExpectation.expectedFulfillmentCount = 2
+        let bodyExpectation = expectation(description: "Body callback called")
+        
+        let parser = HTTPResponseParser(headersReadCallback: { (statusCode: Int, headers: [String:String]) in
+            headerExpectation.fulfill()
+        },
+                                        chunkReadCallback: { (body: String) in
+                                            bodyExpectation.fulfill()
         })
         
         XCTAssertNoThrow(try parser.processResponseData(responseData: responseString1.data(using: .utf8)!))
