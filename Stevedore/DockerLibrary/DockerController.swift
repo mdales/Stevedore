@@ -11,6 +11,7 @@ import Foundation
 protocol DockerControllerDelegate: AnyObject {
     func dockerControllerReceivedInfo(info: DockerAPIResponseInfo)
     func dockerControllerReceivedContainerList(list: [DockerAPIResponseContainer])
+    func dockerControllerReceivedMessage(message: String)
     func dockerControllerReceivedUnexpectedMessage(message: String)
 }
 
@@ -72,6 +73,9 @@ class DockerController: DockerChannelDelegate {
     }
     
     func dockerChannelReceivedGenericMessage(message: DockerGenericMessageResponse) {
-        print(message.message)
+        guard let delegate = delegate else {
+            return
+        }
+        delegate.dockerControllerReceivedMessage(message: message.message)
     }
 }

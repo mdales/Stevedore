@@ -49,11 +49,13 @@ class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
             try docker.connect(delegate: self)
             try docker.requestDockerInfo()
         } catch {
-            os_log("Error talking to Docker: %s", log: StevedoreController.logger, type: .error, error.localizedDescription)
+            os_log("Error talking to Docker: %@", log: StevedoreController.logger, type: .error, error.localizedDescription)
             statusItem.image = self.unhealthyIcon
             self.infoMenuItem.title = "Docker Status: Uncommunicative"
         }
     }
+    
+    // MARK: - Docker controller delegate methods
     
     func dockerControllerReceivedInfo(info: DockerAPIResponseInfo) {
         DispatchQueue.main.async { [unowned self] in
@@ -71,7 +73,7 @@ class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
             do {
                 try self.docker.requestDockerInfo()
             } catch {
-                os_log("Error talking to Docker: %s", log: StevedoreController.logger, type: .error, error.localizedDescription)
+                os_log("Error talking to Docker: %@", log: StevedoreController.logger, type: .error, error.localizedDescription)
                 DispatchQueue.main.async { [unowned self] in
                     self.statusItem.image = self.unhealthyIcon
                     self.infoMenuItem.title = "Docker Status: Uncommunicative"
@@ -139,14 +141,28 @@ class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
     }
     
     func dockerControllerReceivedUnexpectedMessage(message: String) {
-        os_log("Received unexpected message from Docker: %s", log: StevedoreController.logger, type: .info, message)
+        os_log("Received unexpected message from Docker: %@", log: StevedoreController.logger, type: .info, message)
     }
+    
+    func dockerControllerReceivedMessage(message: String) {
+        os_log("Received message from Docker: %@", log: StevedoreController.logger, type: .info, message)
+        DispatchQueue.main.async {
+            let alert = NSAlert()
+            alert.messageText = "Message from Docker"
+            alert.informativeText = message
+            alert.alertStyle = NSAlert.Style.informational
+            alert.addButton(withTitle: "OK")
+            alert.runModal()
+        }
+    }
+    
+    // MARK: - Menu handling code
     
     func menuWillOpen(_ menu: NSMenu) {
         do {
             try docker.requestContainerInfo()
         } catch {
-            os_log("Failed to talk to docker: %s", log: StevedoreController.logger, type: .error, error.localizedDescription)
+            os_log("Failed to talk to docker: %@", log: StevedoreController.logger, type: .error, error.localizedDescription)
             self.statusItem.image = self.unhealthyIcon
             self.infoMenuItem.title = "Docker Status: Uncommunicative"
         }
@@ -161,7 +177,7 @@ class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
         do {
             try docker.startContainer(containerId: containerInfo.Id)
         } catch {
-            os_log("Failed to talk to docker: %s", log: StevedoreController.logger, type: .error, error.localizedDescription)
+            os_log("Failed to talk to docker: %@", log: StevedoreController.logger, type: .error, error.localizedDescription)
             self.statusItem.image = self.unhealthyIcon
             self.infoMenuItem.title = "Docker Status: Uncommunicative"
         }
@@ -188,7 +204,7 @@ end tell
         }
         scriptObject.executeAndReturnError(&error)
         if let actualError = error {
-            os_log("Failed to execute applescript: %s", log: StevedoreController.logger, type: .error, actualError)
+            os_log("Failed to execute applescript: %@", log: StevedoreController.logger, type: .error, actualError)
         }
     }
     
@@ -201,7 +217,7 @@ end tell
         do {
             try docker.stopContainer(containerId: containerInfo.Id)
         } catch {
-            os_log("Failed to talk to docker: %s", log: StevedoreController.logger, type: .error, error.localizedDescription)
+            os_log("Failed to talk to docker: %@", log: StevedoreController.logger, type: .error, error.localizedDescription)
             self.statusItem.image = self.unhealthyIcon
             self.infoMenuItem.title = "Docker Status: Uncommunicative"
         }
