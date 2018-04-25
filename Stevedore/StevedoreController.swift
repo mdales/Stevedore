@@ -61,7 +61,7 @@ class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
         DispatchQueue.main.async { [unowned self] in
             self.statusItem.image = info.ContainersRunning > 0 ? self.activeIcon : self.healthyIcon
             self.infoMenuItem.title = "Docker Status: OK"
-            self.containersMenuItem.title = String(format: "Containers: %d", info.ContainersRunning)
+            self.containersMenuItem.title = String(format: "Active containers: %d", info.ContainersRunning)
         }
         
         // having got a successful response, scheduled to do so again in the future. If we ever get an error doing this
