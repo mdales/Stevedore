@@ -13,6 +13,7 @@ protocol DockerControllerDelegate: AnyObject {
     func dockerControllerReceivedContainerList(list: [DockerAPIResponseContainer])
     func dockerControllerReceivedMessage(message: String)
     func dockerControllerReceivedUnexpectedMessage(message: String)
+    func dockerControllerReceivedError(message: String)
 }
 
 class DockerController: DockerChannelDelegate {
@@ -77,5 +78,12 @@ class DockerController: DockerChannelDelegate {
             return
         }
         delegate.dockerControllerReceivedMessage(message: message.message)
+    }
+    
+    func dockerChannelReceivedErrorStatus(message: String) {
+        guard let delegate = delegate else {
+            return
+        }
+        delegate.dockerControllerReceivedError(message: message)
     }
 }

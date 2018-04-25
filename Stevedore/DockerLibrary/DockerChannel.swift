@@ -63,6 +63,7 @@ protocol DockerChannelDelegate: AnyObject {
     func dockerChannelReceivedContainerList(list: [DockerAPIResponseContainer])
     func dockerChannelReceivedGenericMessage(message: DockerGenericMessageResponse)
     func dockerChannelReceivedUnknownMessage(message: String)
+    func dockerChannelReceivedErrorStatus(message: String)
 }
 
 enum DockerChannelError: Error {
@@ -87,10 +88,8 @@ class DockerChannel  {
     
     init(channelPath: String = "/var/run/docker.sock") {
         self.channelPath = channelPath
-        self.parser = HTTPResponseParser(headersReadCallback: { (statusCode, headers) in
-            print("\(statusCode)")
-        }, chunkReadCallback: { (body) in
-            self.decodeAPIResponse(raw: body)
+        self.parser = HTTPResponseParser(responseCallback: { (response) in
+            self.decodeAPIResponse(response: response)
         })
     }
     
@@ -184,23 +183,34 @@ class DockerChannel  {
         }
     }
     
-    private func decodeAPIResponse(raw: String) {
+    private func decodeAPIResponse(response: HTTPResponseParserResponse) {
         
         guard let delegate = delegate else {
             return
         }
         
-        guard let apiResponse = try? JSONDecoder().decode(DockerAPIResponse.self, from: raw.data(using: .utf8)!) else {
-            delegate.dockerChannelReceivedUnknownMessage(message: raw)
-            return
-        }
-        switch apiResponse {
+        switch response.StatusCode {
+        case 200:
+            guard let apiResponse = try? JSONDecoder().decode(DockerAPIResponse.self, from: response.Body.data(using: .utf8)!) else {
+                delegate.dockerChannelReceivedUnknownMessage(message: response.Body)
+                return
+            }
+            switch apiResponse {
             case let .Info(val):
                 delegate.dockerChannelReceivedInfo(info: val)
             case let .ContainerList(val):
                 delegate.dockerChannelReceivedContainerList(list: val)
             case let .GenericMessage(val):
                 delegate.dockerChannelReceivedGenericMessage(message: val)
+            }
+        case 204:
+            // Simple start/stop commands return no content on success
+            break
+        case 500..<600:
+            delegate.dockerChannelReceivedErrorStatus(message: response.Body)
+        default:
+            // unknown - do something better here
+            delegate.dockerChannelReceivedErrorStatus(message: response.Body)
         }
     }
 }

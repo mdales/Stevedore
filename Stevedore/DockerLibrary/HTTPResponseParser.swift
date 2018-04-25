@@ -20,7 +20,7 @@ enum HTTPResponseParserError: Error {
 }
 
 struct HTTPResponseParserResponse {
-    let StatusCode: int
+    let StatusCode: Int
     let Headers: [String: String]
     let Body: String
 }
@@ -33,8 +33,7 @@ class HTTPResponseParser {
     
     let HTTPResponseParserHTTPHeaderStart = "HTTP/"
 
-    let headersReadCallback: (Int, [String: String]) -> Void
-    let chunkReadCallback: (String) -> Void
+    let responseCallback: (HTTPResponseParserResponse) -> Void
     let syncQueue = DispatchQueue(label: "com.digitalflapjack.HTTPResponseParser.SyncQueue")
     // We want to have a serial queue rather than the global concurrent queue for responses
     let callbackQueue = DispatchQueue(label: "com.digitalflapjack.HTTPResponseParser.CallbackQueue")
@@ -50,10 +49,8 @@ class HTTPResponseParser {
         }
     }
     
-    init(headersReadCallback: @escaping(Int, [String:String]) -> Void,
-         chunkReadCallback: @escaping (String) -> Void) {
-        self.headersReadCallback = headersReadCallback
-        self.chunkReadCallback = chunkReadCallback
+    init(responseCallback: @escaping(HTTPResponseParserResponse) -> Void) {
+        self.responseCallback = responseCallback
     }
     
     func processResponseData(responseData: Data) throws
@@ -129,19 +126,20 @@ class HTTPResponseParser {
                     currentHeaders[parts[0]] = parts[1]
                 }
                 
-                let callback = self.headersReadCallback
-                let headersCopy = self.currentHeaders
-                callbackQueue.async {
-                    callback(statusCode, headersCopy)
-                }
-                
                 if (statusCode == 204) || (statusCode == 205) {
-                    // HTTP 204 means no content
+                    // HTTP 204/205 means no content
+                    let response = HTTPResponseParserResponse(StatusCode: currentStatusCode,
+                                                              Headers: currentHeaders,
+                                                              Body: "")
+                    let callback = self.responseCallback
+                    callbackQueue.async {
+                        callback(response)
+                    }
                     resetState()
                 }
             } else {
                 // this is expected to be content
-                let callback = self.chunkReadCallback
+                let callback = self.responseCallback
                 var encoding = "identity"
                 if let e = currentHeaders["Transfer-Encoding"] {
                     encoding = e
@@ -181,9 +179,11 @@ class HTTPResponseParser {
                         }
                         let contentEnd = buffer.index(contentStart, offsetBy:length)
                         
-                        let content = String(buffer[contentStart..<contentEnd])
+                        let response = HTTPResponseParserResponse(StatusCode: currentStatusCode,
+                                                                  Headers: currentHeaders,
+                                                                  Body: String(buffer[contentStart..<contentEnd]))
                         callbackQueue.async {
-                            callback(content)
+                            callback(response)
                         }
                         
                         if buffer.distance(from: contentEnd, to: buffer.endIndex) > 0 {
@@ -209,9 +209,11 @@ class HTTPResponseParser {
                         }
                         
                         let contentEnd = buffer.index(buffer.startIndex, offsetBy: contentLength)
-                        let content = String(buffer[..<contentEnd])
+                        let response = HTTPResponseParserResponse(StatusCode: currentStatusCode,
+                                                                  Headers: currentHeaders,
+                                                                  Body: String(buffer[..<contentEnd]))
                         callbackQueue.async {
-                            callback(content)
+                            callback(response)
                         }
                         
                         // the end of the content should have a \r\n\r\n on it?
@@ -231,9 +233,11 @@ class HTTPResponseParser {
                             // content is not yet complete, so just wait until we have more data
                             break loop
                         }
-                        let content = String(buffer[..<range.lowerBound])
+                        let response = HTTPResponseParserResponse(StatusCode: currentStatusCode,
+                                                                  Headers: currentHeaders,
+                                                                  Body: String(buffer[..<range.lowerBound]))
                         callbackQueue.async {
-                            callback(content)
+                            callback(response)
                         }
                         
                         buffer = String(buffer[range.upperBound...])

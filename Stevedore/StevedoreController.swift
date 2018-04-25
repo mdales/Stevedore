@@ -108,7 +108,10 @@ class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
         statusItem.image = self.unknownIcon
         self.infoMenuItem.title = "Docker Status: Connecting"
         
-        connectToDocker()
+        let deadline = DispatchTime.now() + .seconds(1)
+        DispatchQueue.main.asyncAfter(deadline: deadline) { [unowned self] in
+            self.connectToDocker()
+        }
     }
     
     // MARK: - Docker controller delegate methods
@@ -215,6 +218,13 @@ class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
             alert.alertStyle = NSAlert.Style.informational
             alert.addButton(withTitle: "OK")
             alert.runModal()
+        }
+    }
+    
+    func dockerControllerReceivedError(message: String) {
+        os_log("Received message from Docker: %@", log: StevedoreController.logger, type: .info, message)
+        DispatchQueue.main.async { [unowned self] in
+            self.resetDockerConnection()
         }
     }
     
