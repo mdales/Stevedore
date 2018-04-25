@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4C13062E2066C66B00D55183 /* DockerChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C13062D2066C66B00D55183 /* DockerChannel.swift */; };
+		4C21BEAB20907B3400C414AA /* ServiceManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C21BEAA20907B3400C414AA /* ServiceManagement.framework */; };
 		4C355B7E206536DE0020798B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C355B7D206536DE0020798B /* AppDelegate.swift */; };
 		4C355B80206536DE0020798B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4C355B7F206536DE0020798B /* Assets.xcassets */; };
 		4C355B83206536DE0020798B /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C355B81206536DE0020798B /* MainMenu.xib */; };
@@ -17,6 +18,10 @@
 		4CE32C082074E73F001D2D1D /* HTTPResponseParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CEABC23206D1DF50054F38C /* HTTPResponseParser.swift */; };
 		4CEABC24206D1DF50054F38C /* HTTPResponseParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CEABC23206D1DF50054F38C /* HTTPResponseParser.swift */; };
 		4CEABC27206D1E220054F38C /* HTTPResponseParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CEABC26206D1E220054F38C /* HTTPResponseParserTests.swift */; };
+		4CEC1D142090AAA3003C4A56 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CEC1D132090AAA3003C4A56 /* AppDelegate.swift */; };
+		4CEC1D162090AAA4003C4A56 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4CEC1D152090AAA4003C4A56 /* Assets.xcassets */; };
+		4CEC1D192090AAA4003C4A56 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CEC1D172090AAA4003C4A56 /* MainMenu.xib */; };
+		4CEC1D202090AB59003C4A56 /* StevedoreLoginLauncher.app in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4CEC1D112090AAA2003C4A56 /* StevedoreLoginLauncher.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,8 +34,22 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		4CEC1D1F2090AB3B003C4A56 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Contents/Library/LoginItems;
+			dstSubfolderSpec = 1;
+			files = (
+				4CEC1D202090AB59003C4A56 /* StevedoreLoginLauncher.app in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		4C13062D2066C66B00D55183 /* DockerChannel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DockerChannel.swift; sourceTree = "<group>"; };
+		4C21BEAA20907B3400C414AA /* ServiceManagement.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ServiceManagement.framework; path = System/Library/Frameworks/ServiceManagement.framework; sourceTree = SDKROOT; };
 		4C355B7A206536DE0020798B /* Stevedore.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Stevedore.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C355B7D206536DE0020798B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4C355B7F206536DE0020798B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -44,6 +63,12 @@
 		4C7EBF9820655BFB00A98CDB /* DockerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DockerController.swift; sourceTree = "<group>"; };
 		4CEABC23206D1DF50054F38C /* HTTPResponseParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPResponseParser.swift; sourceTree = "<group>"; };
 		4CEABC26206D1E220054F38C /* HTTPResponseParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPResponseParserTests.swift; sourceTree = "<group>"; };
+		4CEC1D112090AAA2003C4A56 /* StevedoreLoginLauncher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StevedoreLoginLauncher.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4CEC1D132090AAA3003C4A56 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		4CEC1D152090AAA4003C4A56 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		4CEC1D182090AAA4003C4A56 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		4CEC1D1A2090AAA4003C4A56 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4CEC1D1B2090AAA4003C4A56 /* StevedoreLoginLauncher.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = StevedoreLoginLauncher.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,10 +76,18 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4C21BEAB20907B3400C414AA /* ServiceManagement.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		4C355B87206536DE0020798B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4CEC1D0E2090AAA2003C4A56 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -79,6 +112,7 @@
 			children = (
 				4C355B7C206536DE0020798B /* Stevedore */,
 				4C355B8D206536DE0020798B /* StevedoreTests */,
+				4CEC1D122090AAA2003C4A56 /* StevedoreLoginLauncher */,
 				4C355B7B206536DE0020798B /* Products */,
 				4C7EBF952065573E00A98CDB /* Frameworks */,
 			);
@@ -89,6 +123,7 @@
 			children = (
 				4C355B7A206536DE0020798B /* Stevedore.app */,
 				4C355B8A206536DE0020798B /* StevedoreTests.xctest */,
+				4CEC1D112090AAA2003C4A56 /* StevedoreLoginLauncher.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -120,8 +155,21 @@
 		4C7EBF952065573E00A98CDB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4C21BEAA20907B3400C414AA /* ServiceManagement.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		4CEC1D122090AAA2003C4A56 /* StevedoreLoginLauncher */ = {
+			isa = PBXGroup;
+			children = (
+				4CEC1D132090AAA3003C4A56 /* AppDelegate.swift */,
+				4CEC1D152090AAA4003C4A56 /* Assets.xcassets */,
+				4CEC1D172090AAA4003C4A56 /* MainMenu.xib */,
+				4CEC1D1A2090AAA4003C4A56 /* Info.plist */,
+				4CEC1D1B2090AAA4003C4A56 /* StevedoreLoginLauncher.entitlements */,
+			);
+			path = StevedoreLoginLauncher;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -134,6 +182,7 @@
 				4C355B76206536DE0020798B /* Sources */,
 				4C355B77206536DE0020798B /* Frameworks */,
 				4C355B78206536DE0020798B /* Resources */,
+				4CEC1D1F2090AB3B003C4A56 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -162,13 +211,30 @@
 			productReference = 4C355B8A206536DE0020798B /* StevedoreTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		4CEC1D102090AAA2003C4A56 /* StevedoreLoginLauncher */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4CEC1D1E2090AAA4003C4A56 /* Build configuration list for PBXNativeTarget "StevedoreLoginLauncher" */;
+			buildPhases = (
+				4CEC1D0D2090AAA2003C4A56 /* Sources */,
+				4CEC1D0E2090AAA2003C4A56 /* Frameworks */,
+				4CEC1D0F2090AAA2003C4A56 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = StevedoreLoginLauncher;
+			productName = StevedoreLoginLauncher;
+			productReference = 4CEC1D112090AAA2003C4A56 /* StevedoreLoginLauncher.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		4C355B72206536DE0020798B /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0900;
+				LastSwiftUpdateCheck = 0930;
 				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = "Digital Flapjack";
 				TargetAttributes = {
@@ -183,6 +249,10 @@
 					};
 					4C355B89206536DE0020798B = {
 						CreatedOnToolsVersion = 9.0;
+						ProvisioningStyle = Automatic;
+					};
+					4CEC1D102090AAA2003C4A56 = {
+						CreatedOnToolsVersion = 9.3;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -202,6 +272,7 @@
 			targets = (
 				4C355B79206536DE0020798B /* Stevedore */,
 				4C355B89206536DE0020798B /* StevedoreTests */,
+				4CEC1D102090AAA2003C4A56 /* StevedoreLoginLauncher */,
 			);
 		};
 /* End PBXProject section */
@@ -220,6 +291,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4CEC1D0F2090AAA2003C4A56 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4CEC1D162090AAA4003C4A56 /* Assets.xcassets in Resources */,
+				4CEC1D192090AAA4003C4A56 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -248,6 +328,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4CEC1D0D2090AAA2003C4A56 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4CEC1D142090AAA3003C4A56 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -263,6 +351,14 @@
 			isa = PBXVariantGroup;
 			children = (
 				4C355B82206536DE0020798B /* Base */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+		4CEC1D172090AAA4003C4A56 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4CEC1D182090AAA4003C4A56 /* Base */,
 			);
 			name = MainMenu.xib;
 			sourceTree = "<group>";
@@ -446,6 +542,48 @@
 			};
 			name = Release;
 		};
+		4CEC1D1C2090AAA4003C4A56 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CODE_SIGN_ENTITLEMENTS = StevedoreLoginLauncher/StevedoreLoginLauncher.entitlements;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = RBAHCJXK46;
+				INFOPLIST_FILE = StevedoreLoginLauncher/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.digitalflapjack.StevedoreLoginLauncher;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.0;
+			};
+			name = Debug;
+		};
+		4CEC1D1D2090AAA4003C4A56 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CODE_SIGN_ENTITLEMENTS = StevedoreLoginLauncher/StevedoreLoginLauncher.entitlements;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = RBAHCJXK46;
+				INFOPLIST_FILE = StevedoreLoginLauncher/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.digitalflapjack.StevedoreLoginLauncher;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -472,6 +610,15 @@
 			buildConfigurations = (
 				4C355B97206536DE0020798B /* Debug */,
 				4C355B98206536DE0020798B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4CEC1D1E2090AAA4003C4A56 /* Build configuration list for PBXNativeTarget "StevedoreLoginLauncher" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4CEC1D1C2090AAA4003C4A56 /* Debug */,
+				4CEC1D1D2090AAA4003C4A56 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

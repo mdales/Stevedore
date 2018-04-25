@@ -19,6 +19,12 @@ enum HTTPResponseParserError: Error {
     case ChunkLengthInvalid(String)
 }
 
+struct HTTPResponseParserResponse {
+    let StatusCode: int
+    let Headers: [String: String]
+    let Body: String
+}
+
 // This is just a minimal HTTP parser designed to cope with the things the docker API will spit at us. It in
 // no way attempts to implement any RFC level compatibility. I could (should) have pulled in a third party
 // library, but I wanted to write something that used callbacks rather than delegation for handling interactions.

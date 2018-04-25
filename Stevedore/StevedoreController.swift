@@ -6,8 +6,10 @@
 //  Copyright © 2018 Digital Flapjack. All rights reserved.
 //
 
-import Cocoa
 import os.log
+
+import Cocoa
+import ServiceManagement
 
 class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
 
@@ -55,14 +57,58 @@ class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
         hideInactiveContainersMenuItem.state = defaults.bool(forKey: hideInactiveContainersPreferenceKey) ? .on : .off
         automaticallyStartOnLoginMenuItem.state = defaults.bool(forKey: automaticallyStartOnLoginPreferenceKey) ? .on : .off
         
+        connectToDocker()
+    }
+    
+    // MARK: - Manage docker connection
+    
+    func connectToDocker() {
+
+        dispatchPrecondition(condition: .onQueue(DispatchQueue.main))
+
         do {
             try docker.connect(delegate: self)
+        } catch {
+            os_log("Error connecting to Docker: %@", log: StevedoreController.logger, type: .error, error.localizedDescription)
+            statusItem.image = self.unhealthyIcon
+            self.infoMenuItem.title = "Docker Status: Uncommunicative"
+            
+            // if we fail to connect, try again periodically, as we might have raced with docker launching
+            let deadline = DispatchTime.now() + .seconds(5)
+            DispatchQueue.main.asyncAfter(deadline: deadline) { [unowned self] in
+                self.connectToDocker()
+            }
+            return
+        }
+        
+        do {
             try docker.requestDockerInfo()
         } catch {
             os_log("Error talking to Docker: %@", log: StevedoreController.logger, type: .error, error.localizedDescription)
             statusItem.image = self.unhealthyIcon
             self.infoMenuItem.title = "Docker Status: Uncommunicative"
         }
+    }
+    
+    func resetDockerConnection() {
+        
+        dispatchPrecondition(condition: .onQueue(DispatchQueue.main))
+        
+        do {
+            try docker.disconnect()
+        } catch {
+            os_log("Error thrown when closing docker channel: %@", log: StevedoreController.logger, error.localizedDescription)
+            
+            // if we can't close the channel nicely, give up
+            statusItem.image = self.unhealthyIcon
+            self.infoMenuItem.title = "Docker Status: Uncommunicative"
+            return
+        }
+        
+        statusItem.image = self.unknownIcon
+        self.infoMenuItem.title = "Docker Status: Connecting"
+        
+        connectToDocker()
     }
     
     // MARK: - Docker controller delegate methods
@@ -259,6 +305,10 @@ end tell
         let newVal = !defaults.bool(forKey: automaticallyStartOnLoginPreferenceKey)
         defaults.set(newVal, forKey: automaticallyStartOnLoginPreferenceKey)
         automaticallyStartOnLoginMenuItem.state = newVal ? .on : .off
+
+        if !SMLoginItemSetEnabled("com.digitalflapjack.StevedoreLoginLauncher" as CFString, newVal) {
+            os_log("Failed to set login status.", log: StevedoreController.logger, type: .error)
+        }
     }
     
 }

@@ -39,20 +39,17 @@
                             <menuItem title="Hide inactive containers" id="6Ob-mq-b91">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="hideInactiveContainersToggle" target="c6w-ac-WH4" id="IHa-eg-b9R"/>
+                                    <action selector="hideInactiveContainersToggle:" target="c6w-ac-WH4" id="ci7-aI-Eud"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Automatically start on login" id="UJ2-9G-BGj">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="automaticallyStartOnLoginToggle" target="c6w-ac-WH4" id="aqU-wQ-rtc"/>
+                                    <action selector="automaticallyStartOnLoginToggle:" target="c6w-ac-WH4" id="uNO-sK-FZy"/>
                                 </connections>
                             </menuItem>
                         </items>
                     </menu>
-                    <connections>
-                        <action selector="blah:" target="c6w-ac-WH4" id="4ju-oH-WAu"/>
-                    </connections>
                 </menuItem>
                 <menuItem title="Quit" keyEquivalent="q" id="Eow-wE-SCx">
                     <connections>

@@ -78,8 +78,7 @@ class DockerChannel  {
     weak var delegate: DockerChannelDelegate?
     
     let syncQueue = DispatchQueue(label: "com.digitalflapjack.DockerChannel.syncQueue")
-    let socket_queue = DispatchQueue(label: "com.digitalflapjack.DockerChannel.socket_queue")
-    let processing_queue = DispatchQueue(label: "com.digitalflapjack.DockerChannel.processing_queue")
+    let socketQueue = DispatchQueue(label: "com.digitalflapjack.DockerChannel.socket_queue")
     var ioChannel: DispatchIO? = nil
     var fd: Int32? = -1
     
@@ -89,6 +88,7 @@ class DockerChannel  {
     init(channelPath: String = "/var/run/docker.sock") {
         self.channelPath = channelPath
         self.parser = HTTPResponseParser(headersReadCallback: { (statusCode, headers) in
+            print("\(statusCode)")
         }, chunkReadCallback: { (body) in
             self.decodeAPIResponse(raw: body)
         })
@@ -103,7 +103,7 @@ class DockerChannel  {
             let len = formattedString.withCString{ Int(strlen($0)) }
             formattedString.withCString {
                 let dd = DispatchData(bytes: UnsafeRawBufferPointer(start: $0, count: len))
-                d.write(offset: 0, data: dd, queue: socket_queue, ioHandler: { (b, d, r) in
+                d.write(offset: 0, data: dd, queue: socketQueue, ioHandler: { (b, d, r) in
                     // todo
                 })
             }
@@ -143,7 +143,7 @@ class DockerChannel  {
                 throw DockerChannelError.FailedToConnectSocket(err)
             }
             
-            let d = DispatchIO(type: DispatchIO.StreamType.stream, fileDescriptor: _fd, queue: socket_queue,
+            let d = DispatchIO(type: DispatchIO.StreamType.stream, fileDescriptor: _fd, queue: socketQueue,
                                cleanupHandler: { (_fd) in
                                 // todo
             })
@@ -151,7 +151,7 @@ class DockerChannel  {
             
             d.setLimit(lowWater: 1)
 
-            d.read(offset: 0, length: Int.max, queue: socket_queue) { [weak self] (a, b, c) in
+            d.read(offset: 0, length: Int.max, queue: socketQueue) { [weak self] (a, b, c) in
                 guard let `self` = self else { return }
                 
                 if let b = b {
