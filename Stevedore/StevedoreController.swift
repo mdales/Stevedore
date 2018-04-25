@@ -14,8 +14,14 @@ class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
     @IBOutlet weak var statusMenu: NSMenu!
     @IBOutlet weak var infoMenuItem: NSMenuItem!
     @IBOutlet weak var containersMenuItem: NSMenuItem!
+    @IBOutlet weak var hideInactiveContainersMenuItem: NSMenuItem!
+    @IBOutlet weak var automaticallyStartOnLoginMenuItem: NSMenuItem!
     
     static let logger = OSLog(subsystem: "com.digitalflapjack.stevedore", category: "general")
+    
+    let hideInactiveContainersPreferenceKey = "hideInactiveContainers"
+    let automaticallyStartOnLoginPreferenceKey = "automaticallyuStartOnLogin"
+    
     
     let docker = DockerController()
     let healthyIcon: NSImage?
@@ -44,6 +50,10 @@ class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
         
         statusItem.image = self.unknownIcon
         statusItem.menu = statusMenu
+        
+        let defaults = UserDefaults.standard
+        hideInactiveContainersMenuItem.state = defaults.bool(forKey: hideInactiveContainersPreferenceKey) ? .on : .off
+        automaticallyStartOnLoginMenuItem.state = defaults.bool(forKey: automaticallyStartOnLoginPreferenceKey) ? .on : .off
         
         do {
             try docker.connect(delegate: self)
@@ -90,7 +100,11 @@ class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
                 self.statusMenu.removeItem(containerMenu)
             }
             
-            self.containerMenuItems = list.map({ (containerInfo) -> NSMenuItem in
+            let defaults = UserDefaults.standard
+            let hideInactiveContainers = defaults.bool(forKey: self.hideInactiveContainersPreferenceKey)
+            
+            let visibleList = list.filter({ !hideInactiveContainers || $0.isActive })
+            self.containerMenuItems = visibleList.map({ (containerInfo) -> NSMenuItem in
                 var name = containerInfo.Id
                 
                 // Docker containers list API will return not the human name, but a list of names used by both
@@ -109,24 +123,26 @@ class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
                 }
                 
                 let newItem = NSMenuItem(title: name, action: nil, keyEquivalent: "")
-                newItem.state = containerInfo.State == "running" ? .on : .off
+                newItem.state = containerInfo.isActive ? .on : .off
                 
                 let submenu = NSMenu(title: "")
                 submenu.autoenablesItems = false
-                let runMenu = NSMenuItem(title: "Run", action: #selector(self.runContainer), keyEquivalent: "")
-                runMenu.representedObject = containerInfo
-                runMenu.target = self
-                runMenu.isEnabled = containerInfo.State != "running"
-                submenu.addItem(runMenu)
+                if !hideInactiveContainers {
+                    let runMenu = NSMenuItem(title: "Run", action: #selector(self.runContainer), keyEquivalent: "")
+                    runMenu.representedObject = containerInfo
+                    runMenu.target = self
+                    runMenu.isEnabled = !containerInfo.isActive
+                    submenu.addItem(runMenu)
+                }
                 let attachMenu = NSMenuItem(title: "Attach terminal...", action: #selector(self.attachContainer), keyEquivalent: "")
                 attachMenu.representedObject = containerInfo
                 attachMenu.target = self
-                attachMenu.isEnabled = containerInfo.State == "running"
+                attachMenu.isEnabled = containerInfo.isActive
                 submenu.addItem(attachMenu)
                 let stopMenu = NSMenuItem(title: "Stop", action: #selector(self.stopContainer), keyEquivalent: "")
                 stopMenu.representedObject = containerInfo
                 stopMenu.target = self
-                stopMenu.isEnabled = containerInfo.State == "running"
+                stopMenu.isEnabled = containerInfo.isActive
                 submenu.addItem(stopMenu)
                 
                 newItem.submenu = submenu
@@ -135,7 +151,7 @@ class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
             })
             
             for containerMenu in self.containerMenuItems {
-                self.statusMenu.insertItem(containerMenu, at: self.statusMenu.items.count - 2)
+                self.statusMenu.insertItem(containerMenu, at: self.statusMenu.items.count - 3)
             }
         }
     }
@@ -222,4 +238,27 @@ end tell
             self.infoMenuItem.title = "Docker Status: Uncommunicative"
         }
     }
+    
+    // MARK: - Menu handling code
+    
+    @IBAction func hideInactiveContainersToggle(_ sender: Any) {
+        
+        dispatchPrecondition(condition: .onQueue(DispatchQueue.main))
+        
+        let defaults = UserDefaults.standard
+        let newVal = !defaults.bool(forKey: hideInactiveContainersPreferenceKey)
+        defaults.set(newVal, forKey: hideInactiveContainersPreferenceKey)
+        hideInactiveContainersMenuItem.state = newVal ? .on : .off
+    }
+    
+    @IBAction func automaticallyStartOnLoginToggle(_ sender: Any) {
+        
+        dispatchPrecondition(condition: .onQueue(DispatchQueue.main))
+        
+        let defaults = UserDefaults.standard
+        let newVal = !defaults.bool(forKey: automaticallyStartOnLoginPreferenceKey)
+        defaults.set(newVal, forKey: automaticallyStartOnLoginPreferenceKey)
+        automaticallyStartOnLoginMenuItem.state = newVal ? .on : .off
+    }
+    
 }

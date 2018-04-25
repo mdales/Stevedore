@@ -13,7 +13,9 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customObject id="c6w-ac-WH4" customClass="StevedoreController" customModule="Stevedore" customModuleProvider="target">
             <connections>
+                <outlet property="automaticallyStartOnLoginMenuItem" destination="UJ2-9G-BGj" id="LGR-Sh-q0X"/>
                 <outlet property="containersMenuItem" destination="3ze-dk-qwd" id="f9J-TP-u9x"/>
+                <outlet property="hideInactiveContainersMenuItem" destination="6Ob-mq-b91" id="9g3-xF-hPp"/>
                 <outlet property="infoMenuItem" destination="6cX-jd-dOH" id="Sio-i1-D8g"/>
                 <outlet property="statusMenu" destination="61j-tJ-Jtf" id="Zn3-lb-0vn"/>
             </connections>
@@ -30,6 +32,28 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="2u6-G4-ocC"/>
+                <menuItem title="Preferences" id="ezv-3W-9ak">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <menu key="submenu" title="Preferences" id="APk-ou-v5Q">
+                        <items>
+                            <menuItem title="Hide inactive containers" id="6Ob-mq-b91">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="hideInactiveContainersToggle" target="c6w-ac-WH4" id="IHa-eg-b9R"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Automatically start on login" id="UJ2-9G-BGj">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="automaticallyStartOnLoginToggle" target="c6w-ac-WH4" id="aqU-wQ-rtc"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                    <connections>
+                        <action selector="blah:" target="c6w-ac-WH4" id="4ju-oH-WAu"/>
+                    </connections>
+                </menuItem>
                 <menuItem title="Quit" keyEquivalent="q" id="Eow-wE-SCx">
                     <connections>
                         <action selector="quitCommand:" target="c6w-ac-WH4" id="mqZ-d6-tQP"/>

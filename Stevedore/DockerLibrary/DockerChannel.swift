@@ -24,6 +24,12 @@ struct DockerAPIResponseContainer: Decodable {
     let ImageID: String
     let State: String
     let Created: Int
+    
+    var isActive: Bool {
+        get {
+            return State == "running"
+        }
+    }
 }
 
 struct DockerGenericMessageResponse: Decodable {
