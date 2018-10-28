@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14109" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14109"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14313.18"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -15,7 +16,7 @@
             <connections>
                 <outlet property="automaticallyStartOnLoginMenuItem" destination="UJ2-9G-BGj" id="LGR-Sh-q0X"/>
                 <outlet property="containersMenuItem" destination="3ze-dk-qwd" id="f9J-TP-u9x"/>
-                <outlet property="hideInactiveContainersMenuItem" destination="6Ob-mq-b91" id="9g3-xF-hPp"/>
+                <outlet property="inactiveContainersSubMenu" destination="co4-t8-Ow6" id="w9F-nG-Dkk"/>
                 <outlet property="infoMenuItem" destination="6cX-jd-dOH" id="Sio-i1-D8g"/>
                 <outlet property="statusMenu" destination="61j-tJ-Jtf" id="Zn3-lb-0vn"/>
             </connections>
@@ -31,25 +32,17 @@
                 <menuItem title="Active containers: 0" enabled="NO" id="3ze-dk-qwd">
                     <modifierMask key="keyEquivalentModifierMask"/>
                 </menuItem>
-                <menuItem isSeparatorItem="YES" id="2u6-G4-ocC"/>
-                <menuItem title="Preferences" id="ezv-3W-9ak">
+                <menuItem isSeparatorItem="YES" id="T3L-9N-435"/>
+                <menuItem title="Inactive containers" id="co4-t8-Ow6">
                     <modifierMask key="keyEquivalentModifierMask"/>
-                    <menu key="submenu" title="Preferences" id="APk-ou-v5Q">
-                        <items>
-                            <menuItem title="Hide inactive containers" id="6Ob-mq-b91">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="hideInactiveContainersToggle:" target="c6w-ac-WH4" id="ci7-aI-Eud"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Automatically start on login" id="UJ2-9G-BGj">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="automaticallyStartOnLoginToggle:" target="c6w-ac-WH4" id="uNO-sK-FZy"/>
-                                </connections>
-                            </menuItem>
-                        </items>
-                    </menu>
+                    <menu key="submenu" title="Inactive containers" id="cst-eV-M6t"/>
+                </menuItem>
+                <menuItem isSeparatorItem="YES" id="2u6-G4-ocC"/>
+                <menuItem title="Automatically start on login" id="UJ2-9G-BGj">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="automaticallyStartOnLoginToggle:" target="c6w-ac-WH4" id="uNO-sK-FZy"/>
+                    </connections>
                 </menuItem>
                 <menuItem title="Quit" keyEquivalent="q" id="Eow-wE-SCx">
                     <connections>

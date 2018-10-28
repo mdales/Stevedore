@@ -16,14 +16,12 @@ class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
     @IBOutlet weak var statusMenu: NSMenu!
     @IBOutlet weak var infoMenuItem: NSMenuItem!
     @IBOutlet weak var containersMenuItem: NSMenuItem!
-    @IBOutlet weak var hideInactiveContainersMenuItem: NSMenuItem!
     @IBOutlet weak var automaticallyStartOnLoginMenuItem: NSMenuItem!
+    @IBOutlet weak var inactiveContainersSubMenu: NSMenuItem!
     
     static let logger = OSLog(subsystem: "com.digitalflapjack.stevedore", category: "general")
     
-    let hideInactiveContainersPreferenceKey = "hideInactiveContainers"
     let automaticallyStartOnLoginPreferenceKey = "automaticallyuStartOnLogin"
-    
     
     let docker = DockerController()
     let healthyIcon: NSImage?
@@ -33,15 +31,16 @@ class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
     
     // Only access on main thread
     let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-    var containerMenuItems = [NSMenuItem]()
+    var activeContainerMenuItems = [NSMenuItem]()
+    var inactiveContainersMenuItems = [NSMenuItem]()
     
     override init() {
-        self.healthyIcon = NSImage(named: NSImage.Name("status-healthy"))
+        self.healthyIcon = NSImage(named: "status-healthy")
         self.healthyIcon?.isTemplate = true
-        self.activeIcon = NSImage(named: NSImage.Name("status-active"))
+        self.activeIcon = NSImage(named: "status-active")
         self.activeIcon?.isTemplate = true
-        self.unknownIcon = NSImage(named: NSImage.Name("status-unknown"))
-        self.unhealthyIcon = NSImage(named: NSImage.Name("status-unhealthy"))
+        self.unknownIcon = NSImage(named: "status-unknown")
+        self.unhealthyIcon = NSImage(named: "status-unhealthy")
     }
     
     @IBAction func quitCommand(_ sender: Any) {
@@ -54,7 +53,6 @@ class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
         statusItem.menu = statusMenu
         
         let defaults = UserDefaults.standard
-        hideInactiveContainersMenuItem.state = defaults.bool(forKey: hideInactiveContainersPreferenceKey) ? .on : .off
         automaticallyStartOnLoginMenuItem.state = defaults.bool(forKey: automaticallyStartOnLoginPreferenceKey) ? .on : .off
         
         connectToDocker()
@@ -141,66 +139,78 @@ class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
         }
     }
     
+    func buildMenuItemFroContainer(containerInfo: DockerAPIResponseContainer) -> NSMenuItem {
+        var name = containerInfo.Id
+        
+        // Docker containers list API will return not the human name, but a list of names used by both
+        // humans and other containers of the form:
+        // ["/other-container/hostname-for-this-container", "/actual-container-name"]
+        // Which is useful for building a dependancy graph from the one call, but less good for building
+        // just a UI like ours simply. The below algorithm is just a minimal hack to get something pretty
+        // until we build a better model
+        
+        for protoname in containerInfo.Names {
+            let parts = protoname.split(separator: "/")
+            if parts.count == 1 {
+                name = String(parts[0])
+                break
+            }
+        }
+        
+        let newItem = NSMenuItem(title: name, action: nil, keyEquivalent: "")
+        
+        let submenu = NSMenu(title: "")
+        submenu.autoenablesItems = false
+
+        if (!containerInfo.isActive) {
+            let runMenu = NSMenuItem(title: "Run", action: #selector(self.runContainer(sender:)), keyEquivalent: "")
+            runMenu.representedObject = containerInfo
+            runMenu.target = self
+            submenu.addItem(runMenu)
+        } else {
+            let attachMenu = NSMenuItem(title: "Attach terminal...", action: #selector(self.attachContainer(sender:)), keyEquivalent: "")
+            attachMenu.representedObject = containerInfo
+            attachMenu.target = self
+            submenu.addItem(attachMenu)
+
+            let stopMenu = NSMenuItem(title: "Stop", action: #selector(self.stopContainer(sender:)), keyEquivalent: "")
+            stopMenu.representedObject = containerInfo
+            stopMenu.target = self
+            submenu.addItem(stopMenu)
+        }
+        
+        newItem.submenu = submenu
+        
+        return newItem
+    }
+    
     func dockerControllerReceivedContainerList(list: [DockerAPIResponseContainer]) {
         DispatchQueue.main.async { [unowned self] in
             
             // tear down what we have now
-            for containerMenu in self.containerMenuItems {
+            for containerMenu in self.activeContainerMenuItems {
                 self.statusMenu.removeItem(containerMenu)
             }
+            for containerMenu in self.inactiveContainersMenuItems {
+                self.inactiveContainersSubMenu.submenu?.removeItem(containerMenu)
+            }
             
-            let defaults = UserDefaults.standard
-            let hideInactiveContainers = defaults.bool(forKey: self.hideInactiveContainersPreferenceKey)
-            
-            let visibleList = list.filter({ !hideInactiveContainers || $0.isActive })
-            self.containerMenuItems = visibleList.map({ (containerInfo) -> NSMenuItem in
-                var name = containerInfo.Id
-                
-                // Docker containers list API will return not the human name, but a list of names used by both
-                // humans and other containers of the form:
-                // ["/other-container/hostname-for-this-container", "/actual-container-name"]
-                // Which is useful for building a dependancy graph from the one call, but less good for building
-                // just a UI like ours simply. The below algorithm is just a minimal hack to get something pretty
-                // until we build a better model
-                
-                for protoname in containerInfo.Names {
-                    let parts = protoname.split(separator: "/")
-                    if parts.count == 1 {
-                        name = String(parts[0])
-                        break
-                    }
-                }
-                
-                let newItem = NSMenuItem(title: name, action: nil, keyEquivalent: "")
-                newItem.state = containerInfo.isActive ? .on : .off
-                
-                let submenu = NSMenu(title: "")
-                submenu.autoenablesItems = false
-                if !hideInactiveContainers {
-                    let runMenu = NSMenuItem(title: "Run", action: #selector(self.runContainer), keyEquivalent: "")
-                    runMenu.representedObject = containerInfo
-                    runMenu.target = self
-                    runMenu.isEnabled = !containerInfo.isActive
-                    submenu.addItem(runMenu)
-                }
-                let attachMenu = NSMenuItem(title: "Attach terminal...", action: #selector(self.attachContainer), keyEquivalent: "")
-                attachMenu.representedObject = containerInfo
-                attachMenu.target = self
-                attachMenu.isEnabled = containerInfo.isActive
-                submenu.addItem(attachMenu)
-                let stopMenu = NSMenuItem(title: "Stop", action: #selector(self.stopContainer), keyEquivalent: "")
-                stopMenu.representedObject = containerInfo
-                stopMenu.target = self
-                stopMenu.isEnabled = containerInfo.isActive
-                submenu.addItem(stopMenu)
-                
-                newItem.submenu = submenu
-                
-                return newItem
+            let sortedList = list.sorted(by: { (containerA, containerB) -> Bool in
+                return containerA.Created < containerB.Created
             })
             
-            for containerMenu in self.containerMenuItems {
-                self.statusMenu.insertItem(containerMenu, at: self.statusMenu.items.count - 3)
+            self.activeContainerMenuItems = sortedList.filter({ $0.isActive }).map({ (containerInfo) -> NSMenuItem in
+                return self.buildMenuItemFroContainer(containerInfo: containerInfo);
+            })
+            self.inactiveContainersMenuItems = sortedList.filter({ !$0.isActive }).map({ (containerInfo) -> NSMenuItem in
+                return self.buildMenuItemFroContainer(containerInfo: containerInfo);
+            })
+            
+            for containerMenu in self.activeContainerMenuItems {
+                self.statusMenu.insertItem(containerMenu, at: self.statusMenu.items.count - 5)
+            }
+            for containerMenu in self.inactiveContainersMenuItems {
+                self.inactiveContainersSubMenu.submenu?.insertItem(containerMenu, at: 0)
             }
         }
     }
@@ -293,18 +303,6 @@ end tell
             self.statusItem.image = self.unhealthyIcon
             self.infoMenuItem.title = "Docker Status: Uncommunicative"
         }
-    }
-    
-    // MARK: - Menu handling code
-    
-    @IBAction func hideInactiveContainersToggle(_ sender: Any) {
-        
-        dispatchPrecondition(condition: .onQueue(DispatchQueue.main))
-        
-        let defaults = UserDefaults.standard
-        let newVal = !defaults.bool(forKey: hideInactiveContainersPreferenceKey)
-        defaults.set(newVal, forKey: hideInactiveContainersPreferenceKey)
-        hideInactiveContainersMenuItem.state = newVal ? .on : .off
     }
     
     @IBAction func automaticallyStartOnLoginToggle(_ sender: Any) {
