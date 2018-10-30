@@ -140,24 +140,8 @@ class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
     }
     
     func buildMenuItemFroContainer(containerInfo: DockerAPIResponseContainer) -> NSMenuItem {
-        var name = containerInfo.Id
         
-        // Docker containers list API will return not the human name, but a list of names used by both
-        // humans and other containers of the form:
-        // ["/other-container/hostname-for-this-container", "/actual-container-name"]
-        // Which is useful for building a dependancy graph from the one call, but less good for building
-        // just a UI like ours simply. The below algorithm is just a minimal hack to get something pretty
-        // until we build a better model
-        
-        for protoname in containerInfo.Names {
-            let parts = protoname.split(separator: "/")
-            if parts.count == 1 {
-                name = String(parts[0])
-                break
-            }
-        }
-        
-        let newItem = NSMenuItem(title: name, action: nil, keyEquivalent: "")
+        let newItem = NSMenuItem(title: containerInfo.humanName, action: nil, keyEquivalent: "")
         
         let submenu = NSMenu(title: "")
         submenu.autoenablesItems = false
@@ -167,6 +151,11 @@ class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
             runMenu.representedObject = containerInfo
             runMenu.target = self
             submenu.addItem(runMenu)
+            
+            let delMenu = NSMenuItem(title: "Delete…", action: #selector(self.deleteContainer(sender:)), keyEquivalent: "")
+            delMenu.representedObject = containerInfo
+            delMenu.target = self
+            submenu.addItem(delMenu)
         } else {
             let attachMenu = NSMenuItem(title: "Attach terminal...", action: #selector(self.attachContainer(sender:)), keyEquivalent: "")
             attachMenu.representedObject = containerInfo
@@ -255,13 +244,37 @@ class StevedoreController: NSObject, DockerControllerDelegate, NSMenuDelegate {
             os_log("Failed to cast container record", log: StevedoreController.logger, type: .error)
             return
         }
-
+        
         do {
             try docker.startContainer(containerId: containerInfo.Id)
         } catch {
             os_log("Failed to talk to docker: %@", log: StevedoreController.logger, type: .error, error.localizedDescription)
             self.statusItem.image = self.unhealthyIcon
             self.infoMenuItem.title = "Docker Status: Uncommunicative"
+        }
+    }
+    
+    @objc func deleteContainer(sender: NSMenuItem) {
+        guard let containerInfo = sender.representedObject as! DockerAPIResponseContainer? else {
+            os_log("Failed to cast container record", log: StevedoreController.logger, type: .error)
+            return
+        }
+        
+        let alert = NSAlert()
+        alert.messageText = "Delete Container?"
+        alert.informativeText = "Are you shure that you want to delete \(containerInfo.humanName)?"
+        alert.alertStyle = .warning
+        alert.addButton(withTitle: "OK")
+        alert.addButton(withTitle: "Cancel")
+        
+        if (alert.runModal() == .alertFirstButtonReturn) {
+            do {
+                try docker.deleteContainer(containerId: containerInfo.Id)
+            } catch {
+                os_log("Failed to talk to docker: %@", log: StevedoreController.logger, type: .error, error.localizedDescription)
+                self.statusItem.image = self.unhealthyIcon
+                self.infoMenuItem.title = "Docker Status: Uncommunicative"
+            }
         }
     }
     

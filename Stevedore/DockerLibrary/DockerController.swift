@@ -52,6 +52,10 @@ class DockerController: DockerChannelDelegate {
         try channel.makeAPICall(path: "/containers/\(containerId)/stop", method: "POST")
     }
     
+    func deleteContainer(containerId: String) throws {
+        try channel.makeAPICall(path: "/containers/\(containerId)", method: "DELETE")
+    }
+    
     func dockerChannelReceivedUnknownMessage(message: String) {
         guard let delegate = delegate else {
             return

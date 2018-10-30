@@ -30,6 +30,27 @@ struct DockerAPIResponseContainer: Decodable {
             return State == "running"
         }
     }
+    
+    var humanName: String {
+        get {
+            // Docker containers list API will return not the human name, but a list of names used by both
+            // humans and other containers of the form:
+            // ["/other-container/hostname-for-this-container", "/actual-container-name"]
+            // Which is useful for building a dependancy graph from the one call, but less good for building
+            // just a UI like ours simply. The below algorithm is just a minimal hack to get something pretty
+            // until we build a better model
+            var name = Id
+            for protoname in Names {
+                let parts = protoname.split(separator: "/")
+                if parts.count == 1 {
+                    name = String(parts[0])
+                    break
+                }
+            }
+            
+            return name
+        }
+    }
 }
 
 struct DockerGenericMessageResponse: Decodable {
